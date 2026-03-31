@@ -244,6 +244,9 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 .toggle-label-text { position: absolute; left: -72px; top: 4px; font-size: 14px; color: #666; }
 
 .btn-black { background: black; color: white; border: none; padding: 8px 24px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+.demo-noop-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 99999; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
+.demo-noop-overlay.visible { opacity: 1; }
+.demo-noop-overlay span { color: white; font-size: 22px; font-weight: 600; font-family: 'Open Sans', sans-serif; letter-spacing: 0.3px; }
 .btn-group-orange { display: flex; }
 .btn-orange { background: var(--primary-orange); color: white; border: none; padding: 8px 24px; border-radius: 4px 0 0 4px; font-size: 14px; cursor: pointer; }
 .btn-orange-arrow { background: var(--primary-orange); color: white; border: none; padding: 8px 16px; border-radius: 0 4px 4px 0; cursor: pointer; border-left: 1px solid rgba(255,255,255,0.3); }
@@ -283,10 +286,16 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 #guestClientHint a { color: var(--primary-orange); text-decoration: none; font-weight: 600; }
 #guestClientHint a:hover { text-decoration: underline; }
 .contacts-more-btn { position: relative; display: inline-block; }
+.io-add-as-wrap { position: relative; display: inline-block; }
+.io-add-as-dropdown { position: absolute; bottom: calc(100% + 4px); right: 0; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); min-width: 180px; z-index: 9999; display: none; overflow: hidden; }
+.io-add-as-dropdown.open { display: block; }
+.io-add-as-item { padding: 10px 14px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; transition: background 0.1s; white-space: nowrap; }
+.io-add-as-item:hover { background: #f5f5f5; }
+.btn-orange:disabled { opacity: 0.5; cursor: not-allowed; }
 .contacts-more-trigger { background: white; border: 1px solid #ccc; padding: 8px 16px; border-radius: 4px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; display: flex; align-items: center; gap: 6px; height: 40px; transition: all 0.2s; }
 .contacts-more-trigger:hover { border-color: #aaa; background: #f5f5f5; }
 .contacts-more-trigger.disabled { opacity: 0.4; pointer-events: none; }
-.contacts-more-trigger.active-btn { border-color: var(--primary-orange); color: var(--primary-orange); background: white; }
+.contacts-more-trigger.active-btn { background: var(--primary-orange); color: white; border-color: var(--primary-orange); }
 .contacts-more-dropdown { position: absolute; top: calc(100% + 4px); left: 0; background: white; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); min-width: 160px; z-index: 9999; display: none; overflow: hidden; }
 .contacts-more-dropdown.open { display: block; }
 .contacts-more-dropdown-item { padding: 10px 14px; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; transition: background 0.1s; }
@@ -312,6 +321,10 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 .kebab-dropdown { position: absolute; right: 24px; background: white; border: 1px solid #ddd; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 4px; z-index: 100; min-width: 180px; }
 .kebab-item { padding: 12px 16px; cursor: pointer; font-size: 13px; color: #333; transition: 0.2s; }
 .kebab-item:hover { background: #f5f5f5; color: var(--primary-orange); }
+.kebab-item.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.kebab-item.danger { color: #d32f2f; }
+.kebab-item.danger:hover { background: #fff0f0; color: #d32f2f; }
+.kebab-divider { border-top: 1px solid #eee; margin: 4px 0; }
 
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; display: flex; justify-content: center; align-items: center; }
 .modal-content { background: white; padding: 32px; border-radius: 6px; width: 400px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
@@ -319,6 +332,13 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 .modal-content p { color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 24px; }
 .modal-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
 .modal-option { display: flex; align-items: center; gap: var(--gap-sm); cursor: pointer; font-size: 14px; user-select: none; }
+.role-select { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: 'Open Sans', sans-serif; color: #333; background: white; cursor: pointer; margin-bottom: 12px; }
+.role-select:focus { outline: none; border-color: var(--primary-orange); }
+.role-perm-preview { padding: 12px 14px; background: #f8f8f8; border-radius: 6px; border: 1px solid #eee; margin-bottom: 20px; min-height: 52px; }
+.role-perm-preview-role { font-size: 11px; font-weight: 700; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.role-perm-preview-item { font-size: 13px; color: #444; display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.role-perm-preview-item i { color: var(--primary-orange); font-size: 11px; }
+.role-perm-preview-empty { font-size: 12px; color: #aaa; font-style: italic; }
 .modal-actions { display: flex; justify-content: flex-end; gap: var(--gap-sm); }
 
 .toast { position: fixed; bottom: 32px; right: 32px; background: #333; color: white; padding: 16px 24px; border-radius: 4px; z-index: 300; display: flex; align-items: center; gap: var(--gap-sm); box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: opacity 0.3s; }
@@ -788,8 +808,8 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 }
 .settings-data-cell:last-child { border-right: none; }
 
-.settings-checkbox-wrapper { display: flex; align-items: center; justify-content: center; position: relative; }
-.settings-checkbox-wrapper .expand-icon { position: absolute; left: 8px; }
+.settings-checkbox-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; gap: 4px; }
+.settings-checkbox-wrapper .expand-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); }
 .settings-table-checkbox {
     appearance: none;
     -webkit-appearance: none;
@@ -823,7 +843,7 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
     border-color: #888;
 }
 .setting-detail-text { display: block; font-size: 12px; color: #777; margin-top: 6px; line-height: 1.4; }
-.dl-summary-text { position: absolute; left: calc(50% + 14px); font-size: 11px; color: #888; white-space: nowrap; line-height: 1; }
+.dl-summary-text { font-size: 11px; color: #888; white-space: nowrap; line-height: 1; }
 
 .expand-icon {
     display: inline-block; width: 14px; height: 14px;
@@ -1473,16 +1493,16 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 <div class="app-container">
     
     <nav class="sidebar-dark">
-        <div class="nav-item"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></div>
-        <div class="nav-item active"><i class="fa-solid fa-images"></i><span>Galleries</span></div>
-        <div class="nav-item"><i class="fa-solid fa-dollar-sign"></i><span>Selling</span></div>
-        <div class="nav-item"><i class="fa-solid fa-chart-column"></i><span>Reports</span></div>
-        <div class="nav-item"><i class="fa-solid fa-paper-plane"></i><span>CRM</span></div>
-        <div class="nav-item"><i class="fa-solid fa-calendar-check"></i><span>Booking</span></div>
+        <div class="nav-item demo-noop"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></div>
+        <div class="nav-item active demo-noop"><i class="fa-solid fa-images"></i><span>Galleries</span></div>
+        <div class="nav-item demo-noop"><i class="fa-solid fa-dollar-sign"></i><span>Selling</span></div>
+        <div class="nav-item demo-noop"><i class="fa-solid fa-chart-column"></i><span>Reports</span></div>
+        <div class="nav-item demo-noop"><i class="fa-solid fa-paper-plane"></i><span>CRM</span></div>
+        <div class="nav-item demo-noop"><i class="fa-solid fa-calendar-check"></i><span>Booking</span></div>
         <div class="spacer"></div>
-        <div class="nav-item"><i class="fa-solid fa-globe"></i><span>Website</span></div>
-        <div class="nav-item"><i class="fa-solid fa-pen-nib"></i><span>Blog</span></div>
-        <div class="nav-item"><i class="fa-solid fa-magnifying-glass"></i><span>SEO Tool</span></div>
+        <div class="nav-item demo-noop"><i class="fa-solid fa-globe"></i><span>Website</span></div>
+        <div class="nav-item demo-noop"><i class="fa-solid fa-pen-nib"></i><span>Blog</span></div>
+        <div class="nav-item demo-noop"><i class="fa-solid fa-magnifying-glass"></i><span>SEO Tool</span></div>
         <div class="bottom-item"><i class="fa-solid fa-circle-info"></i><span>Help</span></div>
     </nav>
 
@@ -1491,26 +1511,26 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
         <header class="sticky-header">
             <div class="header-top-row">
                 <div class="gallery-info-block">
-                    <div class="back-btn"><i class="fa-solid fa-arrow-left"></i></div>
+                    <div class="back-btn demo-noop"><i class="fa-solid fa-arrow-left"></i></div>
                     <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Dog" class="gallery-thumb">
                     <div class="gallery-text">
-                        <h3>Pet Photos <i class="fa-solid fa-pencil"></i></h3>
-                        <span class="sub-text">Price List: <a href="#">School</a></span>
+                        <h3>Pet Photos <i class="fa-solid fa-pencil demo-noop"></i></h3>
+                        <span class="sub-text">Price List: <a href="#" class="demo-noop">School</a></span>
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button class="btn-black">PREVIEW</button>
-                    <div class="btn-group-orange">
+                    <button class="btn-black demo-noop">PREVIEW</button>
+                    <div class="btn-group-orange demo-noop">
                         <button class="btn-orange">SHARE</button>
                         <button class="btn-orange-arrow"><i class="fa-solid fa-chevron-down"></i></button>
                     </div>
                 </div>
             </div>
             <div class="context-tabs">
-                <div class="tab">Organize</div>
+                <div class="tab demo-noop">Organize</div>
                 <div class="tab active">Settings</div>
-                <div class="tab">Design</div>
-                <div class="tab">Activity</div>
+                <div class="tab demo-noop">Design</div>
+                <div class="tab demo-noop">Activity</div>
             </div>
         </header>
 
@@ -1549,7 +1569,7 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                     <div class="menu-item" id="nav-watermark">
                         <div class="menu-content">
                             <div class="access-header-row">
-                                <div class="menu-label"><i id="watermark-icon" class="fa-solid fa-droplet"></i> Watermark</div>
+                                <div class="menu-label demo-noop"><i id="watermark-icon" class="fa-solid fa-droplet"></i> Watermark</div>
                                 <div class="pill-wrapper"><span id="watermark-pill" class="sfp-pill sfp-on">ON</span></div>
                             </div>
                         </div>
@@ -1558,7 +1578,7 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                     <div class="menu-item" id="nav-store">
                         <div class="menu-content">
                             <div class="access-header-row">
-                                <div class="menu-label"><i class="fa-solid fa-cart-shopping"></i> Store</div>
+                                <div class="menu-label demo-noop"><i class="fa-solid fa-cart-shopping"></i> Store</div>
                                 <div class="pill-wrapper"><span id="store-pill" class="sfp-pill sfp-on">ON</span></div>
                             </div>
                         </div>
@@ -1566,7 +1586,7 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 
                     <div class="menu-item bottom-item">
                         <div class="menu-content">
-                            <div class="menu-label"><i class="fa-solid fa-image"></i> Setting Presets</div>
+                            <div class="menu-label demo-noop"><i class="fa-solid fa-image"></i> Setting Presets</div>
                         </div>
                     </div>
 
@@ -1626,10 +1646,10 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                                     </div>
                                 </div>
                             </div>
-                            <div id="content-registration" class="content-section hidden"><div class="toggle-row"><div class="toggle-info"><h4>Show Gallery Registration</h4></div><label class="switch"><input type="checkbox"><span class="slider round"></span></label></div></div>
+                            <div id="content-registration" class="content-section hidden"><div class="toggle-row"><div class="toggle-info"><h4>Show Gallery Registration</h4></div><label class="switch demo-noop"><input type="checkbox"><span class="slider round"></span></label></div></div>
                             <div id="content-signin" class="content-section hidden"><div class="toggle-row"><div class="toggle-info"><h4>Gallery access requires account sign-in.</h4></div><label class="switch"><input type="checkbox" checked><span class="slider round"></span><span class="toggle-label-text">Required</span></label></div></div>
                             <hr class="divider">
-                            <div class="footer-settings"><div class="toggle-row"><div class="toggle-info"><h4>Allow gallery to appear in search results: <strong>OFF</strong></h4></div><label class="switch"><input type="checkbox"><span class="slider round"></span></label></div><div class="advanced-settings-link">Show Advanced Settings <i class="fa-solid fa-chevron-down"></i></div></div>
+                            <div class="footer-settings"><div class="toggle-row"><div class="toggle-info"><h4>Allow gallery to appear in search results: <strong>OFF</strong></h4></div><label class="switch demo-noop"><input type="checkbox"><span class="slider round"></span></label></div><div class="advanced-settings-link demo-noop">Show Advanced Settings <i class="fa-solid fa-chevron-down"></i></div></div>
                         </div>
                     </div>
 
@@ -1637,8 +1657,8 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                         <h2>CONTACTS</h2>
                         <div class="sub-tabs">
                             <span class="sub-tab active">Add Manually</span>
-                            <span class="sub-tab">Add from Contacts</span>
-                            <span class="sub-tab">Import CSV</span>
+                            <span class="sub-tab demo-noop">Add from Contacts</span>
+                            <span class="sub-tab demo-noop">Import CSV</span>
                         </div>
                         <div class="input-grid">
                             <input type="text" id="firstName" class="form-input" placeholder="First Name">
@@ -1698,6 +1718,7 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
     </div>
 
     <div id="toast" class="toast hidden"><i class="fa-solid fa-circle-check"></i> <span id="toast-msg">Action Successful</span></div>
+    <div class="demo-noop-overlay" id="demoNoopOverlay"><span>Not part of the demo</span></div>
 
     <!-- Portal account tooltip -->
     <div id="portal-tip" class="hidden"></div>
@@ -1706,11 +1727,8 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
         <div class="modal-content">
             <h3>CHANGE ROLE</h3>
             <p>Select a new role for this contact.</p>
-            <div class="modal-options">
-                <label class="modal-option"><input type="radio" name="newRole" value="General"> General</label>
-                <label class="modal-option"><input type="radio" name="newRole" value="Guest"> Guest</label>
-                <label class="modal-option"><input type="radio" name="newRole" value="Client"> Client</label>
-            </div>
+            <select id="newRoleSelect" class="role-select"></select>
+            <div id="rolePermPreview" class="role-perm-preview"></div>
             <div class="modal-actions">
                 <button class="btn-outline" onclick="closeModals()">Cancel</button>
                 <button class="btn-orange" id="saveRoleBtn">Save</button>
@@ -2428,7 +2446,7 @@ function removeCustomRole(roleId) {
         modal.querySelector('h3').innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:#d32f2f;margin-right:8px;"></i>REMOVE THE "${roleName.toUpperCase()}" ROLE FROM THIS GALLERY?`;
         document.getElementById('removeRoleModalText').innerHTML =
             `You've added <strong>${count} ${personWord}</strong> to the <strong>"${roleName.toUpperCase()}"</strong> role.` +
-            `<br><br>If you remove this role, <strong>${thatThose}</strong> will be moved to the <strong>General</strong> role and will only have access to features that are available to everyone.` +
+            `<br><br>If you remove this role, <strong>${thatThose}</strong> will be moved to the <strong>General</strong> role and will only have access to features that are turned on for the General Role.` +
             `<br><br><span style="font-size:12px;color:#888;">You can always change a contact's role by using the kebab menu in the gallery contacts table.</span>`;
         modal.classList.remove('hidden');
     } else {
@@ -2881,6 +2899,19 @@ function buildSettingsTableWithCheckboxes() {
             tableBody.appendChild(detailRow);
         }
     });
+
+    // Propagate last-role-col to body cells at the same column index
+    const lastRoleTh = thead.querySelector('.last-role-col');
+    if (lastRoleTh) {
+        const thCells = Array.from(thead.querySelectorAll('th'));
+        const colIndex = thCells.indexOf(lastRoleTh);
+        if (colIndex >= 0) {
+            tableBody.querySelectorAll('tr').forEach(tr => {
+                const td = tr.querySelectorAll('td')[colIndex];
+                if (td) td.classList.add('last-role-col');
+            });
+        }
+    }
 
     wireTableEvents();
 }
@@ -3554,6 +3585,7 @@ function updateSidebarContactSummary() {
 
         return items;
     }
+    window.getPermissionsForRole = getPermissionsForRole;
 
     function buildCard(roleCellText, isVisitorNoAccess, email) {
         if (isVisitorNoAccess) {
@@ -3835,26 +3867,61 @@ accessCards.forEach(card => card.addEventListener('click', function() {
 // =====================================================
 
 function openInviteOnlyModal() {
-    document.getElementById('ioAddContactBtn').onclick = () => addContactFromInviteModal('General');
+    const addBtn   = document.getElementById('ioAddContactBtn');
     const container = document.getElementById('ioActionButtons');
-    container.querySelectorAll('.io-role-btn').forEach(b => b.remove());
+    container.innerHTML = '';
 
-    state.customRoles.forEach(role => {
-        const roleName = role.name.trim() || 'Custom Role';
-        const btn = document.createElement('button');
-        btn.className = 'btn-outline disabled io-role-btn';
-        btn.disabled = true;
-        btn.textContent = `ADD AS ${roleName.toUpperCase()}`;
-        btn.addEventListener('click', () => addContactFromInviteModal(roleName));
-        container.appendChild(btn);
-    });
+    if (state.customRoles.length === 0) {
+        // Simple ADD button — General only
+        addBtn.style.display = '';
+        addBtn.textContent = 'ADD';
+        addBtn.onclick = () => addContactFromInviteModal('General');
+    } else {
+        // ADD AS dropdown — General + all custom roles
+        addBtn.style.display = 'none';
+
+        const wrap = document.createElement('div');
+        wrap.className = 'io-add-as-wrap';
+
+        const trigger = document.createElement('button');
+        trigger.id = 'ioAddAsTrigger';
+        trigger.className = 'btn-orange';
+        trigger.disabled = true;
+        trigger.style.cssText = 'border-radius:4px;display:flex;align-items:center;gap:6px;';
+        trigger.innerHTML = `ADD AS <i class="fa-solid fa-chevron-down" style="font-size:11px;"></i>`;
+
+        const dropdown = document.createElement('div');
+        dropdown.className = 'io-add-as-dropdown';
+
+        const allRoles = [{ id: null, name: 'General' }, ...state.customRoles];
+        allRoles.forEach(role => {
+            const roleName = role.name.trim() || 'Custom Role';
+            const item = document.createElement('div');
+            item.className = 'io-add-as-item';
+            item.textContent = `ADD AS ${roleName.toUpperCase()}`;
+            item.addEventListener('click', () => {
+                addContactFromInviteModal(roleName);
+                dropdown.classList.remove('open');
+            });
+            dropdown.appendChild(item);
+        });
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+        document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+        wrap.appendChild(trigger);
+        wrap.appendChild(dropdown);
+        container.appendChild(wrap);
+    }
 
     ['ioFirstName', 'ioLastName', 'ioEmail', 'ioMobile'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
     checkIoInputs();
-
     elements.modals.inviteOnly.classList.remove('hidden');
 }
 
@@ -3913,23 +3980,20 @@ function closeInviteOnlyModal() {
 
 function checkIoInputs() {
     const hasEmail = document.getElementById('ioEmail').value.trim() !== '';
+    // Simple ADD button (no custom roles)
     const addBtn = document.getElementById('ioAddContactBtn');
-    if (addBtn) {
+    if (addBtn && addBtn.style.display !== 'none') {
         addBtn.disabled = !hasEmail;
         addBtn.style.opacity = hasEmail ? '' : '0.5';
         addBtn.style.cursor  = hasEmail ? '' : 'not-allowed';
     }
-    document.querySelectorAll('#ioActionButtons .io-role-btn').forEach(btn => {
-        if (hasEmail) {
-            btn.classList.remove('disabled');
-            btn.removeAttribute('disabled');
-            btn.classList.add('active-btn');
-        } else {
-            btn.classList.add('disabled');
-            btn.setAttribute('disabled', 'true');
-            btn.classList.remove('active-btn');
-        }
-    });
+    // ADD AS dropdown trigger (with custom roles)
+    const trigger = document.getElementById('ioAddAsTrigger');
+    if (trigger) {
+        trigger.disabled = !hasEmail;
+        trigger.style.opacity = hasEmail ? '' : '0.5';
+        trigger.style.cursor  = hasEmail ? '' : 'not-allowed';
+    }
 }
 
 function addContactFromInviteModal(displayRole) {
@@ -4053,8 +4117,9 @@ function updateContactsTabButtons() {
     const hasClient = existing.includes('CLIENT');
     const hintEl    = document.getElementById('guestClientHint');
     const hintText  = document.getElementById('guestClientHintText');
-    const missing   = !hasGuest || !hasClient;
-    if (hintEl) hintEl.classList.toggle('hidden', !missing);
+    const atMax   = state.customRoles.length >= MAX_CUSTOM_ROLES;
+    const missing = !hasGuest || !hasClient;
+    if (hintEl) hintEl.classList.toggle('hidden', !missing || atMax);
     if (hintText && missing) {
         if (!hasGuest && !hasClient) hintText.textContent = 'Looking for clients and guests?';
         else if (!hasClient)         hintText.textContent = 'Looking for clients?';
@@ -4420,10 +4485,12 @@ function createContactRow(fName, lName, email, mobile, displayRole) {
         <td style="position:relative;">
             <i class="fa-solid fa-ellipsis-vertical kebab-icon"></i>
             <div class="kebab-dropdown hidden">
-                <div class="kebab-item" onclick="openRoleModal()">Change Role</div>
-                <div class="kebab-item" onclick="triggerToast('Access link copied')">Copy Access Link</div>
-                <div class="kebab-item" onclick="triggerToast('Password reset sent')">Send Password Reset</div>
+                <div class="kebab-item change-role-item" onclick="openRoleModal()">Change Role</div>
+                <div class="kebab-item demo-noop" onclick="triggerToast('Access link copied')">Copy Access Link</div>
+                <div class="kebab-item demo-noop" onclick="triggerToast('Password reset sent')">Send Password Reset</div>
                 <div class="kebab-item" onclick="openPermModal()">Customize Permissions</div>
+                <div class="kebab-divider"></div>
+                <div class="kebab-item danger remove-contact-item">Remove</div>
             </div>
         </td>`;
     return r;
@@ -4452,7 +4519,17 @@ document.addEventListener('click', (e) => {
             currentRowElement = e.target.closest('tr');
             dd.style.top = 'auto';
             dd.style.bottom = '40px';
+            // Disable Change Role if no custom roles exist
+            const changeRoleItem = dd.querySelector('.change-role-item');
+            if (changeRoleItem) changeRoleItem.classList.toggle('disabled', state.customRoles.length === 0);
         }
+    } else if (e.target.classList.contains('remove-contact-item')) {
+        const row = e.target.closest('tr');
+        if (row) {
+            row.remove();
+            updateSidebarContactSummary();
+        }
+        document.querySelectorAll('.kebab-dropdown').forEach(d => d.classList.add('hidden'));
     } else {
         document.querySelectorAll('.kebab-dropdown').forEach(d => d.classList.add('hidden'));
     }
@@ -4468,20 +4545,47 @@ window.triggerToast = function(msg) {
     setTimeout(() => t.classList.add('hidden'), 3000);
 };
 
+function updateRolePermPreview(roleName) {
+    const preview = document.getElementById('rolePermPreview');
+    if (!preview) return;
+    const items = getPermissionsForRole(roleName);
+    preview.innerHTML = `
+        <div class="role-perm-preview-role">Features for ${roleName}</div>
+        ${items.length
+            ? items.map(i => `<div class="role-perm-preview-item"><i class="fa-solid fa-check"></i>${i}</div>`).join('')
+            : '<div class="role-perm-preview-empty">No features enabled</div>'
+        }`;
+}
+
 window.openRoleModal = function() {
-    const optionsContainer = document.querySelector('#roleModal .modal-options');
-    let optionsHTML = `<label class="modal-option"><input type="radio" name="newRole" value="General"> General</label>`;
+    const select = document.getElementById('newRoleSelect');
+    select.innerHTML = `<option value="General">General</option>`;
     state.customRoles.forEach(role => {
-        const roleName = role.name.trim().toUpperCase() || 'CUSTOM ROLE';
-        optionsHTML += `<label class="modal-option"><input type="radio" name="newRole" value="${roleName}"> ${roleName}</label>`;
+        const roleName = role.name.trim() || 'Custom Role';
+        const opt = document.createElement('option');
+        opt.value = roleName.toUpperCase();
+        opt.textContent = roleName.toUpperCase();
+        select.appendChild(opt);
     });
-    optionsContainer.innerHTML = optionsHTML;
+    // Pre-select current role if available
+    if (currentRowElement) {
+        const current = currentRowElement.querySelector('.role-cell')?.textContent.trim().toUpperCase();
+        if (current) {
+            const match = Array.from(select.options).find(o => o.value === current);
+            if (match) select.value = match.value;
+        }
+    }
+    updateRolePermPreview(select.value);
+    select.onchange = () => updateRolePermPreview(select.value);
     elements.modals.role.classList.remove('hidden');
 };
 
 document.getElementById('saveRoleBtn').addEventListener('click', () => {
-    const s = document.querySelector('input[name="newRole"]:checked');
-    if (s && currentRowElement) { currentRowElement.querySelector('.role-cell').innerHTML = `<i class="fa-solid fa-circle-info role-cell-info-icon"></i>${s.value.toUpperCase()}`; updateSidebarContactSummary(); }
+    const select = document.getElementById('newRoleSelect');
+    if (select && currentRowElement) {
+        currentRowElement.querySelector('.role-cell').innerHTML = `<i class="fa-solid fa-circle-info role-cell-info-icon"></i>${select.value.toUpperCase()}`;
+        updateSidebarContactSummary();
+    }
     elements.modals.role.classList.add('hidden');
 });
 
@@ -5215,6 +5319,18 @@ updateContactsTabButtons();
     }
     tip.addEventListener('mouseenter', () => clearTimeout(hideTimer));
     tip.addEventListener('mouseleave', schedulHide);
+})();
+
+// Demo noop overlay — delegated mouseover/out on all .demo-noop elements
+(function() {
+    const overlay = document.getElementById('demoNoopOverlay');
+    if (!overlay) return;
+    document.addEventListener('mouseover', (e) => {
+        if (e.target.closest('.demo-noop')) overlay.classList.add('visible');
+    });
+    document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('.demo-noop')) overlay.classList.remove('visible');
+    });
 })();
 
 </script>
