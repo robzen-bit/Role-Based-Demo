@@ -4492,8 +4492,9 @@ function wireFeatureInfoTooltips() {
 // SIDEBAR SUMMARIES
 // =====================================================
 
+let sfpLegendDismissed = false;
 function dismissSfpLegend() {
-    localStorage.setItem('sfpLegendDismissed', '1');
+    sfpLegendDismissed = true;
     document.querySelector('.sfp-legend')?.remove();
 }
 
@@ -4540,7 +4541,7 @@ function updateSidebarFeatureSummary() {
         </div>`;
     });
 
-    if (hasPartial && !localStorage.getItem('sfpLegendDismissed')) {
+    if (hasPartial && !sfpLegendDismissed) {
         html += `<div class="sfp-legend">
             <span class="sfp-pill sfp-partial sfp-legend-pill">ON</span>
             <span class="sfp-legend-label">= on for some roles</span>
