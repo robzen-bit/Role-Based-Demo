@@ -6728,7 +6728,7 @@ requestAnimationFrame(() => applyPlanRestrictions());
         let text = el.dataset.tip;
         // General info icon: strip "including visitors from the web" clause when Invite Only
         if (el.classList.contains('role-everyone-info') && state.accessType === 'invite-only') {
-            text = 'Features turned on here are available to anyone who can access this gallery — contacts you\u2019ve added without a specific role. Contacts assigned to a role follow that role\u2019s settings instead.';
+            text = 'Features turned on here are available only to contacts you\u2019ve added to this gallery. Contacts assigned to a specific role follow that role\u2019s settings instead.';
         }
         if (!html && !text) return;
         if (html) tip.innerHTML = html;
