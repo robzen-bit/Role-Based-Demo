@@ -231,8 +231,12 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 
 .btn-black { background: black; color: white; border: none; padding: 8px 24px; border-radius: 4px; cursor: pointer; font-size: 14px; }
 .demo-noop-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 99999; pointer-events: none; opacity: 0; transition: opacity 0.35s ease; }
-.demo-noop-overlay.visible { opacity: 1; transition: opacity 0.2s ease; }
-.demo-noop-overlay span { color: white; font-size: 22px; font-weight: 600; font-family: 'Open Sans', sans-serif; letter-spacing: 0.3px; }
+.demo-noop-overlay.visible { opacity: 1; pointer-events: all; transition: opacity 0.2s ease; }
+.demo-noop-card { position: relative; background: rgba(12,12,12,0.88); border-radius: 10px; padding: 16px; max-width: 440px; text-align: center; }
+.demo-noop-close { position: absolute; top: -14px; right: -14px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 18px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.demo-noop-close:hover { background: rgba(255,255,255,0.28); }
+.demo-noop-quote { color: #ffffff; font-size: 14px; font-weight: 400; font-style: italic; line-height: 1.6; font-family: 'Open Sans', sans-serif; margin-bottom: 10px; }
+.demo-noop-label { color: rgba(255,255,255,0.38); font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-family: 'Open Sans', sans-serif; font-style: normal; }
 .btn-group-orange { display: flex; }
 .btn-orange { background: var(--primary-orange); color: white; border: none; padding: 8px 24px; border-radius: 4px 0 0 4px; font-size: 14px; cursor: pointer; }
 .btn-orange-arrow { background: var(--primary-orange); color: white; border: none; padding: 8px 16px; border-radius: 0 4px 4px 0; cursor: pointer; border-left: 1px solid rgba(255,255,255,0.3); }
@@ -1164,8 +1168,9 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
     width: 440px; max-width: 94vw;
     box-shadow: 0 8px 40px rgba(0,0,0,0.18);
 }
-.admin-auth-icon { font-size: 26px; color: #ddd; margin-bottom: 14px; }
-.admin-auth-title { font-size: 17px; font-weight: 700; color: #222; margin: 0 0 6px; }
+.admin-auth-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.admin-auth-icon { font-size: 26px; color: #ddd; flex-shrink: 0; }
+.admin-auth-title { font-size: 17px; font-weight: 700; color: #222; margin: 0; }
 .admin-auth-notice {
     font-size: 13px; color: #666; line-height: 1.6;
     margin: 0 0 20px;
@@ -1191,10 +1196,9 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
     font-family: 'Open Sans', sans-serif; white-space: nowrap;
 }
 .admin-auth-submit:hover { filter: brightness(0.92); }
-.admin-auth-error { font-size: 12px; color: #d32f2f; }
-.admin-auth-cancel { padding: 8px 20px; font-size: 13px; font-weight: 600; background: none; color: #666; border: 1px solid #ccc; border-radius: 7px; cursor: pointer; font-family: 'Open Sans', sans-serif; transition: background 0.15s, border-color 0.15s; }
+.admin-auth-cancel { padding: 9px 20px; font-size: 13px; font-weight: 600; background: none; color: #666; border: 1px solid #ccc; border-radius: 7px; cursor: pointer; font-family: 'Open Sans', sans-serif; transition: background 0.15s, border-color 0.15s; white-space: nowrap; }
 .admin-auth-cancel:hover { background: #f5f5f5; border-color: #bbb; }
-.admin-auth-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; min-height: 20px; }
+.admin-auth-error { font-size: 12px; color: #d32f2f; font-style: italic; display: block; text-align: center; margin-top: 10px; min-height: 16px; }
 .admin-auth-close { position: absolute; top: 12px; right: 14px; background: none; border: none; cursor: pointer; font-size: 18px; color: #bbb; line-height: 1; padding: 4px 6px; border-radius: 4px; }
 .admin-auth-close:hover { color: #666; background: #f0f0f0; }
 
@@ -2125,7 +2129,13 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
     </div>
 
     <div id="toast" class="toast hidden"><i class="fa-solid fa-circle-check"></i> <span id="toast-msg">Action Successful</span></div>
-    <div class="demo-noop-overlay" id="demoNoopOverlay"><span>Not part of the demo</span></div>
+    <div class="demo-noop-overlay" id="demoNoopOverlay">
+        <div class="demo-noop-card">
+            <button class="demo-noop-close" id="demoNoopClose" title="Dismiss">&times;</button>
+            <div class="demo-noop-quote" id="demoNoopQuote"></div>
+            <div class="demo-noop-label">Whatever you clicked is not part of the demo</div>
+        </div>
+    </div>
 
     <!-- Portal account tooltip -->
     <div id="portal-tip" class="hidden"></div>
@@ -2203,15 +2213,6 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
         </div>
     </div>
 
-    <div id="editRoleModal" class="modal-overlay hidden">
-        <div class="modal-content" style="width:340px;">
-            <h3 id="editRoleModalTitle">EDIT ROLE</h3>
-            <div id="editRoleModalActions" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;"></div>
-            <div class="modal-actions">
-                <button class="btn-outline" id="editRoleModalCancelBtn">CANCEL</button>
-            </div>
-        </div>
-    </div>
 
     <div id="removeRoleModal" class="modal-overlay hidden">
         <div class="modal-content" style="width: 440px;">
@@ -2228,21 +2229,21 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
     <div id="adminAuthModal" class="admin-auth-modal hidden">
         <div class="admin-auth-box" style="position:relative;">
             <button class="admin-auth-close" onclick="cancelAdminAuth()" title="Close">&times;</button>
-            <div class="admin-auth-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <h2 class="admin-auth-title">YOU SHALL NOT PASS<span style="letter-spacing:0.05em;">......</span><span style="font-size:0.65em;opacity:0.6;font-style:italic;"> *ehhem*</span></h2>
+            <div class="admin-auth-header">
+                <div class="admin-auth-icon"><i class="fa-solid fa-hat-wizard"></i></div>
+                <h2 class="admin-auth-title">YOU SHALL NOT PASS<span style="letter-spacing:0.05em;">......</span><span style="font-size:0.65em;opacity:0.6;font-style:italic;"> *ehhem*</span></h2>
+            </div>
             <div class="admin-auth-notice">
                 <strong>Hey, wrong door!</strong> If you're here to review or give feedback on the prototype, this section isn't for you — head to <strong>Gallery Features</strong> or <strong>Gallery Access</strong> instead. This is the admin area where the prototype experience is configured before a demo.
             </div>
             <div class="admin-auth-fields">
                 <div class="admin-auth-row">
                     <input type="password" id="adminAuthInput" class="admin-auth-input" placeholder="Admin password" onkeydown="if(event.key==='Enter')submitAdminAuth()">
+                    <button class="admin-auth-cancel" onclick="cancelAdminAuth()">Cancel</button>
                     <button class="admin-auth-submit" onclick="submitAdminAuth()">Enter</button>
                 </div>
             </div>
-            <div class="admin-auth-footer">
-                <span id="adminAuthError" class="admin-auth-error" style="visibility:hidden;font-style:italic;"></span>
-                <button class="admin-auth-cancel" onclick="cancelAdminAuth()">Cancel</button>
-            </div>
+            <span id="adminAuthError" class="admin-auth-error" style="visibility:hidden;"></span>
         </div>
     </div>
 
@@ -2270,7 +2271,7 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                         <div class="upgrade-plan-tag">Popular</div>
                     </div>
                     <ul class="upgrade-plan-features">
-                        <li><i class="fa-solid fa-check" style="color:#43a047;"></i> Up to 5 custom roles</li>
+                        <li><i class="fa-solid fa-check" style="color:#43a047;"></i> 1 custom role</li>
                         <li><i class="fa-solid fa-check" style="color:#43a047;"></i> Guest &amp; Client roles</li>
                         <li><i class="fa-solid fa-xmark" style="color:#d32f2f;"></i> No per-contact permissions</li>
                     </ul>
@@ -2282,7 +2283,7 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                         <div class="upgrade-plan-tag">&nbsp;</div>
                     </div>
                     <ul class="upgrade-plan-features">
-                        <li><i class="fa-solid fa-check" style="color:#43a047;"></i> Unlimited custom roles</li>
+                        <li><i class="fa-solid fa-check" style="color:#43a047;"></i> Up to 5 custom roles</li>
                         <li><i class="fa-solid fa-check" style="color:#43a047;"></i> Guest &amp; Client roles</li>
                         <li><i class="fa-solid fa-check" style="color:#43a047;"></i> Per-contact permissions</li>
                     </ul>
@@ -2442,7 +2443,6 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                 <div class="optional-divider"><span>Saved Roles</span></div>
                 <div id="savedRolesOptions" class="choose-role-options" style="margin-bottom:12px;"></div>
                 <div class="saved-roles-actions">
-                    <button class="btn-outline-action-sm" id="savedRolesDuplicateBtn" disabled style="opacity:0.4;cursor:not-allowed;"><i class="fa-solid fa-copy"></i> DUPLICATE</button>
                     <button class="btn-destructive-sm" id="savedRolesDeleteBtn" disabled style="opacity:0.4;cursor:not-allowed;"><i class="fa-solid fa-trash"></i> DELETE</button>
                 </div>
             </div>
@@ -2471,21 +2471,6 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
             <div class="modal-actions">
                 <button class="btn-outline" id="deleteSavedRoleCancelBtn">CANCEL</button>
                 <button class="btn-destructive" id="deleteSavedRoleConfirmBtn">YES, DELETE</button>
-            </div>
-        </div>
-    </div>
-    <!-- Duplicate saved role modal -->
-    <div id="duplicateSavedRoleModal" class="modal-overlay hidden">
-        <div class="modal-content" style="width:400px;">
-            <h3><i class="fa-solid fa-copy" style="margin-right:8px;"></i>DUPLICATE ROLE</h3>
-            <p style="margin-bottom:16px;font-size:13px;color:#666;">Give this duplicate role a new name. It will be added to your gallery with the same features.</p>
-            <div class="field-group" style="margin-bottom:24px;">
-                <input type="text" id="duplicateRoleNameInput" class="text-input" placeholder="Role name (required)" maxlength="30" style="width:100%;">
-                <div style="font-size:11px;color:#aaa;text-align:right;margin-top:4px;"><span id="duplicateRoleNameCount">0</span> / 30</div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-outline" id="duplicateRoleCancelBtn">CANCEL</button>
-                <button class="btn-orange" id="duplicateRoleConfirmBtn" disabled>CREATE</button>
             </div>
         </div>
     </div>
@@ -2921,7 +2906,7 @@ function sortCustomRoles() {
     const order = r => {
         const n = r.name.trim().toUpperCase();
         if (n === 'GUEST')  return 0;
-        if (n === 'CLIENT') return 1;
+        if (n === 'CLIENT') return 99;
         return 2;
     };
     state.customRoles.sort((a, b) => order(a) - order(b));
@@ -3004,44 +2989,6 @@ document.getElementById('deleteSavedRoleCancelBtn').addEventListener('click', ()
     pendingDeleteSavedRoleName = null;
 });
 
-// Duplicate saved role modal
-(function() {
-    const modal   = document.getElementById('duplicateSavedRoleModal');
-    const input   = document.getElementById('duplicateRoleNameInput');
-    const counter = document.getElementById('duplicateRoleNameCount');
-    const confirmBtn = document.getElementById('duplicateRoleConfirmBtn');
-
-    input.addEventListener('input', () => {
-        counter.textContent = input.value.length;
-        confirmBtn.disabled = input.value.trim().length === 0;
-    });
-
-    document.getElementById('duplicateRoleCancelBtn').addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
-
-    confirmBtn.addEventListener('click', () => {
-        const newName = input.value.trim();
-        if (!newName) return;
-        const source = getSavedRoles().find(r => r.name === window._duplicateSourceName);
-        if (source) {
-            const role = createCustomRole(newName);
-            FEATURES.forEach(f => {
-                role.features[f] = !!source.features[f];
-                role.userChecked[f] = !!source.userChecked[f];
-            });
-            if (source.downloadSettings) {
-                role.downloadSettings = JSON.parse(JSON.stringify(source.downloadSettings));
-            }
-            rebuildFeaturesTable();
-            equalizeRoleColumns();
-            closeChooseRoleModal();
-            triggerToast(`"${escapeHtml(newName)}" added as a duplicate of "${escapeHtml(window._duplicateSourceName)}"`);
-        }
-        modal.classList.add('hidden');
-        window._duplicateSourceName = null;
-    });
-})();
 
 document.getElementById('deleteSavedRoleConfirmBtn').addEventListener('click', () => {
     if (pendingDeleteSavedRoleName) {
@@ -3112,8 +3059,7 @@ function openChooseRoleModal(fromContactsHint) {
             </div>`;
         }).join('');
 
-        const deleteBtn    = document.getElementById('savedRolesDeleteBtn');
-        const duplicateBtn = document.getElementById('savedRolesDuplicateBtn');
+        const deleteBtn = document.getElementById('savedRolesDeleteBtn');
 
         function updateActionBtns() {
             const checked = savedOptions.querySelectorAll('.saved-role-checkbox:checked');
@@ -3121,12 +3067,9 @@ function openChooseRoleModal(fromContactsHint) {
                 c.classList.toggle('is-checked', !!c.querySelector('.saved-role-checkbox:checked'));
             });
             const count = checked.length;
-            deleteBtn.disabled    = count === 0;
-            duplicateBtn.disabled = count !== 1;
+            deleteBtn.disabled         = count === 0;
             deleteBtn.style.opacity    = count === 0 ? '0.4' : '';
             deleteBtn.style.cursor     = count === 0 ? 'not-allowed' : '';
-            duplicateBtn.style.opacity = count !== 1 ? '0.4' : '';
-            duplicateBtn.style.cursor  = count !== 1 ? 'not-allowed' : '';
         }
 
         savedOptions.querySelectorAll('.saved-role-checkbox').forEach(cb => {
@@ -3152,17 +3095,7 @@ function openChooseRoleModal(fromContactsHint) {
             openChooseRoleModal();
         };
 
-        duplicateBtn.onclick = () => {
-            const cb = savedOptions.querySelector('.saved-role-checkbox:checked');
-            if (!cb) return;
-            window._duplicateSourceName = cb.dataset.roleName;
-            const input = document.getElementById('duplicateRoleNameInput');
-            input.value = '';
-            document.getElementById('duplicateRoleNameCount').textContent = '0';
-            document.getElementById('duplicateRoleConfirmBtn').disabled = true;
-            document.getElementById('duplicateSavedRoleModal').classList.remove('hidden');
-            setTimeout(() => input.focus(), 50);
-        };
+
     } else {
         savedSection.classList.add('hidden');
     }
@@ -3210,36 +3143,6 @@ function addCustomRole() {
 
 let pendingRemoveRoleId = null;
 
-function openEditRoleModal(roleId) {
-    const role = state.customRoles.find(r => r.id === roleId);
-    if (!role) return;
-    const isSystemRole = ['GUEST', 'CLIENT'].includes(role.name.trim().toUpperCase());
-    const isSaved = isRoleSaved(role.name);
-    const modal = document.getElementById('editRoleModal');
-    document.getElementById('editRoleModalTitle').textContent = `EDIT ${role.name.trim().toUpperCase()}`;
-    const actionsEl = document.getElementById('editRoleModalActions');
-    actionsEl.innerHTML = '';
-
-    const makeBtn = (iconClass, label, cls, onClick) => {
-        const btn = document.createElement('button');
-        btn.className = `edit-role-action-btn${cls ? ' ' + cls : ''}`;
-        btn.innerHTML = `<i class="${iconClass}"></i>${label}`;
-        btn.addEventListener('click', () => { modal.classList.add('hidden'); onClick(); });
-        actionsEl.appendChild(btn);
-    };
-
-    if (!isSystemRole && !isSaved) {
-        makeBtn('fa-solid fa-pencil', 'Rename', '', () => openNameRoleModal(roleId));
-        makeBtn('fa-solid fa-floppy-disk', 'Save for later use', '', () => openSaveRoleModal(roleId));
-    }
-    makeBtn('fa-solid fa-trash', 'Remove', 'danger', () => removeCustomRole(roleId));
-
-    modal.classList.remove('hidden');
-}
-
-document.getElementById('editRoleModalCancelBtn')?.addEventListener('click', () => {
-    document.getElementById('editRoleModal').classList.add('hidden');
-});
 
 
 function removeCustomRole(roleId) {
@@ -3675,7 +3578,7 @@ function buildSettingsTableWithCheckboxes() {
         // Build dropdown items
         const renameItem    = !isSystemRole ? `<div class="role-header-dd-item" data-dd-action="rename" data-role-id="${role.id}">Rename</div>` : '';
         const saveItem      = (!isSystemRole && !isSaved) ? `<div class="role-header-dd-item" data-dd-action="save" data-role-id="${role.id}">Save for later use</div>` : '';
-        const duplicateItem = getCustomRoleCount() < getPlanRoleCap() ? `<div class="role-header-dd-item" data-dd-action="duplicate" data-role-id="${role.id}">Duplicate</div>` : '';
+        const duplicateItem = (!isSystemRole && getCustomRoleCount() < getPlanRoleCap()) ? `<div class="role-header-dd-item" data-dd-action="duplicate" data-role-id="${role.id}">Duplicate</div>` : '';
         const removeItem    = `<div class="role-header-dd-item danger" data-dd-action="remove" data-role-id="${role.id}">Remove</div>`;
         // Composite pill: [+ NAME | ⋯] with dropdown outside the overflow:hidden pill
         const pillHTML = `<div class="role-header-menu">
@@ -4847,7 +4750,7 @@ function addRandomRoles() {
             role.userChecked[f] = true; // Always independent — never cascades from General
         });
         DOWNLOADS.forEach(d => {
-            const modes = ['off','full','individual','specific'];
+            const modes = ['off','full-and-individual','individual-only','specific'];
             role.downloadSettings[d].mode = modes[Math.floor(Math.random() * modes.length)];
             if (role.downloadSettings[d].mode === 'specific') role.downloadSettings[d].qty = String(Math.floor(Math.random() * 20) + 1);
         });
@@ -5076,8 +4979,10 @@ function openQuickAddModal(roleId) {
 
     if (roleId === null) {
         title.innerHTML = '<i class="fa-solid fa-user-plus"></i> ADD A CONTACT TO THIS GALLERY';
-        document.getElementById('ioAddContactBtn').textContent = 'ADD';
-        document.getElementById('ioAddContactBtn').onclick = () => addContactFromInviteModal('General');
+        const addBtn = document.getElementById('ioAddContactBtn');
+        addBtn.style.display = '';
+        addBtn.textContent = 'ADD';
+        addBtn.onclick = () => addContactFromInviteModal('General');
     } else {
         const role = state.customRoles.find(r => r.id === roleId);
         const roleName = role?.name?.trim() || 'Custom Role';
@@ -5130,6 +5035,14 @@ function checkIoInputs() {
         trigger.disabled = !hasEmail;
         trigger.style.opacity = hasEmail ? '' : '0.5';
         trigger.style.cursor  = hasEmail ? '' : 'not-allowed';
+    }
+    // Role-specific ADD AS button (quick-add from role pill)
+    const roleBtn = document.querySelector('.io-role-btn');
+    if (roleBtn) {
+        roleBtn.disabled = !hasEmail;
+        roleBtn.className = hasEmail ? 'btn-orange io-role-btn' : 'btn-outline disabled io-role-btn';
+        roleBtn.style.opacity = hasEmail ? '' : '0.5';
+        roleBtn.style.cursor  = hasEmail ? '' : 'not-allowed';
     }
 }
 
@@ -5351,147 +5264,6 @@ function updateNameRoleCreateBtn() {
     }
 }
 
-function buildNameRoleFeaturePanel(presetFeatures) {
-    const container = document.getElementById('nameRoleFeatureList');
-    if (!container) return;
-    const on = (key) => presetFeatures ? presetFeatures.includes(key) : false;
-
-    const gridItem = (key, label) =>
-        `<div class="feat-panel-grid-item">
-            <label class="feat-panel-grid-label">
-                <input type="checkbox" class="nr-perm-chk" data-perm="${key}"${on(key) ? ' checked' : ''}>
-                ${label}${featInfoTip(key)}
-            </label>
-        </div>`;
-
-    const expandRow = (key, label, inner) => {
-        const checked = on(key);
-        return `<div class="perm-row perm-row-expandable">
-            <div class="perm-row-header">
-                <label class="perm-row-label">
-                    <input type="checkbox" class="nr-perm-chk" data-perm="${key}"${checked ? ' checked' : ''}>
-                    ${label}${featInfoTip(key)}
-                </label>
-                <span class="expand-icon ${checked ? 'expanded' : 'collapsed'}" data-nr-perm-key="${key}"></span>
-            </div>
-            <div class="perm-expansion${checked ? '' : ' hidden'}" id="nr-perm-exp-${key}">${inner}</div>
-        </div>`;
-    };
-
-    const kwHTML = () => {
-        const name = 'nr_kw';
-        return `<div class="expansion-settings" style="padding-top:14px;">
-            <h4 class="expansion-heading">Standalone Gallery Page</h4>
-            <label class="custom-checkbox" style="margin-bottom:12px;">
-                <input type="checkbox" id="nr-kw-collapse" checked>
-                <span class="checkmark"></span>Collapse Search Bar on Page Load
-            </label>
-            <div class="field-group" style="margin-bottom:16px;">
-                <label style="font-size:12px;font-weight:600;margin-bottom:6px;display:block;">Search Placeholder (Max 60 chars)</label>
-                <input type="text" class="text-input expansion-input" placeholder="Search the contents of this gallery..." maxlength="60">
-            </div>
-            <h4 class="expansion-heading">When Embedded in your Website</h4>
-            <label class="custom-checkbox">
-                <input type="checkbox" id="nr-kw-sitewide" checked>
-                <span class="checkmark"></span>Disable Sitewide search bar on this gallery
-            </label>
-        </div>`;
-    };
-
-    const dlHTML = (type) => {
-        const name = `nr_${type}_dl`;
-        const isVideo = type === 'video';
-        const galleryResOptions = isVideo
-            ? `<label class="custom-checkbox"><input type="checkbox" checked><span class="checkmark"></span>Original</label>
-                    <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span>1080p - Full HD</label>`
-            : `<label class="custom-checkbox"><input type="checkbox" checked><span class="checkmark"></span>Original Resolution</label>
-                    <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span>High Resolution</label>
-                    <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span>Medium Resolution</label>
-                    <label class="custom-checkbox"><input type="checkbox"><span class="checkmark"></span>Low Resolution</label>`;
-        return `<div class="expansion-settings" style="padding-top:14px;">
-            <div style="margin-bottom:8px;">
-                <select id="nr_${type}_dl_select" class="dl-mode-select" onchange="updateNrDownloadSections('${type}')">
-                    <option value="full-and-individual">Full Gallery &amp; Individual Download</option>
-                    <option value="full">Full Gallery Download</option>
-                    <option value="specific">Specific Amount Download</option>
-                    <option value="individual-only">Individual Download Only</option>
-                </select>
-                <div id="nr_${type}_qty_wrap" class="hidden" style="margin-top:6px;">
-                    <input type="number" class="inline-qty-input" id="nr_${type}_qty" value="5" min="1" style="margin-left:0;">
-                </div>
-            </div>
-            <hr class="adv-divider">
-            <div class="res-block" id="nr_${type}_gallery_res">
-                <h4>Gallery Download Resolutions</h4>
-                <div class="checkbox-list">
-                    ${galleryResOptions}
-                </div>
-            </div>
-        </div>`;
-    };
-
-    const indivHTML = (type) => {
-        const name = `nr_indiv_${type}_res`;
-        return `<div class="expansion-settings" style="padding-top:14px;">
-            <div class="res-block">
-                <h4>Select Allowed Download Resolution</h4>
-                <div class="radio-group">
-                    <label class="custom-radio"><input type="radio" name="${name}" value="original" checked><span class="radio-mark"></span>Original</label>
-                    <label class="custom-radio"><input type="radio" name="${name}" value="high"><span class="radio-mark"></span>High Res</label>
-                    <label class="custom-radio"><input type="radio" name="${name}" value="low"><span class="radio-mark"></span>Low Res</label>
-                </div>
-            </div>
-        </div>`;
-    };
-
-    const html = `
-        <div class="feat-panel-grid">
-            ${gridItem('commenting',  'Commenting')}
-            ${gridItem('favorites',   'Favorites')}
-            ${gridItem('sharing',     'Sharing')}
-            ${gridItem('facefinder',  'Face Finder')}
-        </div>
-        ${expandRow('keywordsearch',    'Keyword Search',              kwHTML())}
-        ${expandRow('downloads-photo',  'Gallery Photo Downloads',     dlHTML('photo'))}
-        ${expandRow('individual-photo', 'Individual Photo Downloads',  indivHTML('photo'))}
-        ${expandRow('downloads-video',  'Gallery Video Downloads',     dlHTML('video'))}
-        ${expandRow('individual-video', 'Individual Video Downloads',  indivHTML('video'))}
-    `;
-    container.innerHTML = html;
-
-    // Wire expand icons — use event delegation so FA's <i>→<svg> swap doesn't lose listeners
-    container.addEventListener('click', (e) => {
-        const icon = e.target.closest('[data-nr-perm-key]');
-        if (!icon) return;
-        e.stopPropagation();
-        const key = icon.dataset.nrPermKey;
-        const exp = document.getElementById(`nr-perm-exp-${key}`);
-        if (!exp) return;
-        const isHidden = exp.classList.contains('hidden');
-        exp.classList.toggle('hidden', !isHidden);
-        icon.classList.toggle('collapsed', !isHidden);
-        icon.classList.toggle('expanded', isHidden);
-    });
-
-    container.querySelectorAll('.nr-perm-chk').forEach(cb => {
-        cb.addEventListener('change', () => {
-            const key = cb.dataset.perm;
-            const exp = document.getElementById(`nr-perm-exp-${key}`);
-            const icon = container.querySelector(`.expand-icon[data-nr-perm-key="${key}"]`);
-            if (exp) exp.classList.toggle('hidden', !cb.checked);
-            if (icon) { icon.classList.toggle('collapsed', !cb.checked); icon.classList.toggle('expanded', cb.checked); }
-        });
-    });
-
-    container.querySelectorAll('.perm-row-expandable input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', () => {
-            // Only handle legacy rows without ID'd qty inputs (downloads handled via updateNrDownloadSections)
-            const row = radio.closest('.perm-row-expandable');
-            const qtyInput = row?.querySelector('.inline-qty-input:not([id])');
-            if (qtyInput) qtyInput.classList.toggle('hidden', radio.value !== 'specific');
-        });
-    });
-}
 
 function openNameRoleModal(roleId = null, presetName = null, presetFeatures = null) {
     nameRoleModalEditId = roleId || null;
@@ -6652,8 +6424,8 @@ document.getElementById('vwPanel2ConfirmBtn').addEventListener('click', () => {
         // Still unresolved visitors — rebuild panel 1 with updated count and go back
         openVisitorsWarningModal(remaining);
     } else {
-        closeVisitorsWarningModal();
-        completeInviteOnlySwitch();
+        // All resolved — show the success confirmation panel before completing the switch
+        showVwPanel(3);
     }
 });
 
@@ -7027,7 +6799,7 @@ requestAnimationFrame(() => applyPlanRestrictions());
         tip.style.left = rect.left + 'px';
         tip.style.top  = (rect.bottom + 6) + 'px';
     }
-    function schedulHide() {
+    function scheduleHide() {
         hideTimer = setTimeout(() => tip.classList.add('hidden'), 120);
     }
 
@@ -7041,23 +6813,55 @@ requestAnimationFrame(() => applyPlanRestrictions());
         table.addEventListener('mouseout', function(e) {
             const icon = e.target.closest('.settings-portal-icon');
             if (!icon) return;
-            schedulHide();
+            scheduleHide();
         });
     }
     tip.addEventListener('mouseenter', () => clearTimeout(hideTimer));
-    tip.addEventListener('mouseleave', schedulHide);
+    tip.addEventListener('mouseleave', scheduleHide);
 })();
 
-// Demo noop overlay — show on click, auto-dismiss after 1.5s
+// Demo noop overlay — show on click, dismiss via X button
 (function() {
-    const overlay = document.getElementById('demoNoopOverlay');
-    if (!overlay) return;
-    let hideTimer = null;
+    const overlay  = document.getElementById('demoNoopOverlay');
+    const quoteEl  = document.getElementById('demoNoopQuote');
+    const closeBtn = document.getElementById('demoNoopClose');
+    if (!overlay || !quoteEl || !closeBtn) return;
+
+    const LOTR_NOOP_QUOTES = [
+        '"One does not simply walk into Mordor." — And one does not simply click this in the demo.',
+        '"You shall not pass!" — This feature has spoken.',
+        '"Not all those who wander are lost." — But you\'ve definitely wandered outside the demo.',
+        '"We must not be hasty." — Especially when clicking outside the demo.',
+        '"A wizard is never late, nor is he early." — This feature, however, simply isn\'t here.',
+        '"My precious..." — That feature is not yours to click. Not in this demo.',
+        '"Fly, you fools!" — Or at least, fly back to the demo.',
+        '"It\'s a dangerous business, Frodo, going out your door." — Clicking outside the demo is no different.',
+        '"Shortcuts make long delays." — This one leads nowhere in the demo.',
+        '"There\'s some good in this world, Mr. Frodo." — But this feature isn\'t part of the demo.',
+        '"Nobody tosses a dwarf!" — Nobody clicks outside the demo!',
+        '"Even the smallest person can change the course of the future." — But not by clicking here.',
+        '"The board is set, the pieces are moving." — This piece, however, is not in play for the demo.',
+        '"The Road goes ever on and on." — This one, however, leads outside the demo.',
+        '"I am no man!" — And that is no part of the demo.',
+        '"Speak, friend, and enter." — This feature is listening. It is not impressed.',
+        '"What about second breakfast?" — What about staying within the demo?',
+        '"Three rings for the Elven-kings... none for whatever you just clicked."',
+        '"I would not take the Ring." — And this feature is not taking you anywhere.',
+        '"All we have to decide is what to do with the time that is given us." — Perhaps spend it within the demo.',
+    ];
+
+    function dismiss() { overlay.classList.remove('visible'); }
+
+    closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dismiss();
+    });
+
     document.addEventListener('click', (e) => {
+        if (e.target.closest('#demoNoopClose')) return;
         if (!e.target.closest('.demo-noop')) return;
-        clearTimeout(hideTimer);
+        quoteEl.textContent = LOTR_NOOP_QUOTES[Math.floor(Math.random() * LOTR_NOOP_QUOTES.length)];
         overlay.classList.add('visible');
-        hideTimer = setTimeout(() => overlay.classList.remove('visible'), 1500);
     });
 })();
 
