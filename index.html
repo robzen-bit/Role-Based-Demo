@@ -2903,13 +2903,7 @@ function createCustomRole(name) {
 
 // Sorts customRoles so Guest always comes first, Client always comes last.
 function sortCustomRoles() {
-    const order = r => {
-        const n = r.name.trim().toUpperCase();
-        if (n === 'GUEST')  return 0;
-        if (n === 'CLIENT') return 99;
-        return 2;
-    };
-    state.customRoles.sort((a, b) => order(a) - order(b));
+    // Roles remain in the order they were added — no sorting applied
 }
 
 // =====================================================
