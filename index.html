@@ -100,6 +100,7 @@ a:hover { color: var(--primary-orange); opacity: 0.8; }
 .pill-wrapper { display: flex; align-items: center; flex-shrink: 0; margin-left: var(--gap-sm); }
 .status-pill { background-color: var(--primary-orange); color: white; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
 .status-pill.green { background-color: var(--green-status); }
+.status-pill.red { background-color: #d32f2f; }
 
 #nav-access { height: 126px !important; min-height: 126px; padding: var(--gap-lg) var(--gap-lg) var(--gap-sm) var(--gap-lg); align-items: flex-start; box-sizing: border-box; }
 #nav-access .access-header-row { justify-content: flex-start; gap: 0; }
@@ -513,9 +514,9 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 .settings-col-role:not(.custom-role-col) {
     position: relative;
 }
-/* Extra right padding on custom-role headers so the X button never crowds the cell border */
+/* Custom role header columns */
 .settings-col-role.custom-role-col {
-    padding-right: 28px !important;
+    padding-right: 8px !important;
 }
 /* Tooltip now lives on the General pill, not the entire cell */
 .role-everyone-header { display: inline-flex; align-items: center; gap: 5px; }
@@ -1446,7 +1447,7 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 .checkbox-list { display: flex; flex-direction: column; gap: 8px; }
 
 /* === VISITOR FILTER BANNER === */
-#visitorsBanner, #noContactsBanner {
+#visitorsBanner, #noContactsBanner, #offlineBanner {
     background: #fffbea;
     border: 1px solid #f0c040;
     border-radius: 6px;
@@ -1813,6 +1814,31 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 .role-pill-icon-btn:last-child { padding-right: 11px; }
 .role-pill-icon-btn:first-of-type { padding-left: 10px; }
 .role-pill-icon-btn:hover { color: var(--primary-orange); }
+
+/* Role header kebab — lives inside the composite pill as the last section */
+.role-header-menu { position: relative; }
+.role-header-menu-btn {
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px 11px;
+    background: none; border: none;
+    color: rgba(0,0,0,0.38); font-size: 14px;
+    cursor: pointer; transition: color 0.15s;
+}
+.role-header-menu-btn:hover { color: var(--primary-orange); }
+.role-header-dd {
+    position: absolute; top: calc(100% + 6px); right: 0;
+    background: white; border: 1px solid #e0e0e0; border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    min-width: 160px; z-index: 200; overflow: hidden;
+}
+.role-header-dd-item {
+    padding: 9px 14px; font-size: 13px; color: #333;
+    cursor: pointer; white-space: nowrap; text-align: left;
+    transition: background 0.12s;
+}
+.role-header-dd-item:hover { background: #f5f5f5; }
+.role-header-dd-item.danger { color: #d32f2f; }
+.role-header-dd-item.danger:hover { background: #fff5f5; }
     </style>
 </head>
 <body>
@@ -2000,8 +2026,14 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                             <div class="access-card" id="card-invite-only" data-target="invite-only"><div class="icon-wrapper"><i class="fa-solid fa-paper-plane"></i></div><h3>INVITE ONLY</h3><p>Only contacts <strong>you add</strong> to the gallery contacts list can access.</p></div>
                             <div class="access-card" data-target="offline"><div class="icon-wrapper"><i class="fa-solid fa-ban"></i></div><h3>OFFLINE</h3><p>Gallery is only visible to you, no one else can access.</p></div>
                         </div>
+                        <div id="accessNoContactsBanner" class="hidden" style="margin-top:16px;">
+                            <div class="alert-box" style="background:#fff0f0;border-color:#f5c0c0;">
+                                <div class="alert-icon"><i class="fa-solid fa-triangle-exclamation" style="color:#d32f2f;"></i></div>
+                                <div class="alert-text" style="color:#b71c1c;"><strong>No one can currently access this gallery.</strong><br>Invite Only is enabled, but you haven't added any contacts yet. <a href="#" id="accessNoContactsLink" style="color:#b71c1c;">Add contacts</a> to grant access.</div>
+                            </div>
+                        </div>
                         <div class="dynamic-wrapper">
-                            <div id="content-offline" class="content-section hidden"><div class="alert-box"><div class="alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="alert-text"><strong>Notice:</strong> Gallery is Offline...</div></div></div>
+                            <div id="content-offline" class="content-section hidden"><div class="alert-box"><div class="alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="alert-text">Gallery is <strong>OFFLINE</strong> — no one but you can access.</div></div></div>
                             <div id="content-password" class="content-section hidden">
                                 <div class="field-group">
                                     <label>Gallery Visitor Password</label>
@@ -2043,11 +2075,20 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                         </div>
                         <hr class="divider">
 
+                        <div id="offlineBanner" class="hidden visitors-banner-red">
+                            <div class="visitors-banner-body">
+                                <div class="visitors-banner-text">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <span>Gallery is <strong>OFFLINE</strong> — no one but you can access.</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div id="noContactsBanner" class="hidden visitors-banner-red">
                             <div class="visitors-banner-body">
                                 <div class="visitors-banner-text">
                                     <i class="fa-solid fa-triangle-exclamation"></i>
-                                    <span>This gallery is set to <strong>Invite Only</strong>, but no contacts have been added. <strong>No one can access this gallery.</strong> Add contacts below to grant access.</span>
+                                    <span><strong>This gallery is currently inaccessible.</strong><br>Invite Only is enabled, but your contacts list is empty. Add contacts to grant access.</span>
                                 </div>
                             </div>
                         </div>
@@ -2475,6 +2516,9 @@ function getPlanRoleCap() {
     if (currentPlan === 'professional') return 1;
     return 5; // advanced
 }
+function getCustomRoleCount() {
+    return state.customRoles.filter(r => !['GUEST', 'CLIENT'].includes(r.name.trim().toUpperCase())).length;
+}
 let roleIdCounter = 0;
 
 const SETTINGS_DEFINITIONS = [
@@ -2593,7 +2637,7 @@ const elements = {
 function switchView(name) {
     Object.values(elements.nav).forEach(el => el && el.classList.remove('active-menu'));
     Object.values(elements.views).forEach(el => el.classList.add('hidden'));
-    if (name === 'access')   { elements.nav.access.classList.add('active-menu');   elements.views.access.classList.remove('hidden'); }
+    if (name === 'access')   { elements.nav.access.classList.add('active-menu');   elements.views.access.classList.remove('hidden'); checkAccessNoContactsBanner(); }
     if (name === 'features') { elements.nav.features.classList.add('active-menu'); elements.views.features.classList.remove('hidden'); equalizeRoleColumns(); }
     if (name === 'contacts') {
         elements.nav.contacts.classList.add('active-menu');
@@ -2802,8 +2846,8 @@ function applyPlanRestrictions() {
     const isBasic    = currentPlan === 'basic';
     const isPro      = currentPlan === 'professional';
     const isAdvanced = currentPlan === 'advanced';
-    const atProCap      = isPro      && state.customRoles.length >= 1;
-    const atAdvancedCap = isAdvanced && state.customRoles.length >= 5;
+    const atProCap      = isPro      && getCustomRoleCount() >= 1;
+    const atAdvancedCap = isAdvanced && getCustomRoleCount() >= 5;
     const lockRoles  = isBasic || atProCap || atAdvancedCap;
     const lockPerContact = isBasic || isPro;  // basic+pro: no per-contact permissions
 
@@ -3011,7 +3055,7 @@ document.getElementById('deleteSavedRoleConfirmBtn').addEventListener('click', (
 });
 
 function addSavedRole(savedRoleData) {
-    if (state.customRoles.length >= getPlanRoleCap()) return;
+    if (getCustomRoleCount() >= getPlanRoleCap()) return;
     const role = createCustomRole(savedRoleData.name);
     FEATURES.forEach(f => {
         role.features[f] = !!savedRoleData.features[f];
@@ -3137,7 +3181,7 @@ function addPrebuiltRole(name, featureKeys) {
         role.features[f] = true;
         role.userChecked[f] = true;
         if (DOWNLOADS.includes(f)) {
-            role.downloadSettings[f] = { mode: 'full', qty: '' };
+            role.downloadSettings[f] = { mode: 'full-and-individual', qty: '' };
         }
     });
     state.customRoles.push(role);
@@ -3159,7 +3203,7 @@ function addPrebuiltRole(name, featureKeys) {
 }
 
 function addCustomRole() {
-    if (state.customRoles.length >= getPlanRoleCap()) return;
+    if (getCustomRoleCount() >= getPlanRoleCap()) return;
     state.customRoles.push(createCustomRole(''));
     rebuildFeaturesTable();
 }
@@ -3439,10 +3483,9 @@ function equalizeRoleColumns() {
     const labelW = LABEL_COL_W;
     const isCompact = state.customRoles.length > 0;
     const minAddRoleW = isCompact ? 72 : 112;
-    // Composite custom role pills: 14px side pad on name btn (14+14=28) + separator(1) + edit btn(~30) + save btn(~31) = ~90px
-    // Simple General pill: 16px side pad × 2 = 32px + small buffer
-    const PILL_H_PAD_SIMPLE    = 32 + 12; // 16px×2 padding + cell buffer
-    const PILL_H_PAD_COMPOSITE = 28 + 92; // 14px×2 name pad + icon buttons + cell buffer
+    // Composite pill: name btn (14px side pad × 2) + separator (1px) + kebab btn (~32px) + cell buffer
+    const PILL_H_PAD_SIMPLE    = 32 + 12;  // General pill: 16px×2 + cell buffer
+    const PILL_H_PAD_COMPOSITE = 28 + 65;  // 14px×2 name pad + separator + kebab btn + cell buffer
 
     // Compute per-column minimum width based on pill text
     const roleThs = Array.from(document.querySelectorAll('.settings-col-role'));
@@ -3618,35 +3661,38 @@ function buildSettingsTableWithCheckboxes() {
         <th role="columnheader" class="settings-col-label"><div class="settings-col-label-inner"><span>Gallery Features</span><button id="colAScrollBackBtn" title="Scroll back to start"><i class="fa-solid fa-arrow-right"></i></button></div>${fsLink}<button class="ftm-close-link" onclick="closeFullscreenTable()">Exit Full Screen</button></th>
         <th role="columnheader" class="settings-col-role">
             <div class="role-everyone-header">
-                <button class="role-name-pill pill-everyone role-name-pill-btn" data-role-type="everyone">+ General</button>
-                <span class="role-everyone-info dl-label-tip" data-tip="Features turned on here are available to anyone who can access this gallery — including visitors from the web and contacts you\u2019ve added without a specific role. Contacts assigned to a role follow that role\u2019s settings instead."><i class="fa-solid fa-circle-info"></i></span>
+                <div class="role-name-pill pill-everyone role-name-pill-composite">
+                    <button class="role-pill-contact-btn" data-role-type="everyone">+ General</button>
+                    <div class="role-pill-separator"></div>
+                    <span class="role-everyone-info role-pill-icon-btn dl-label-tip" data-tip="Features turned on here are available to anyone who can access this gallery — including visitors from the web and contacts you\u2019ve added without a specific role. Contacts assigned to a role follow that role\u2019s settings instead."><i class="fa-solid fa-circle-info"></i></span>
+                </div>
             </div>
         </th>`;
 
     state.customRoles.forEach((role, roleIndex) => {
         const isSystemRole = ['GUEST', 'CLIENT'].includes(role.name.trim().toUpperCase());
         const isSaved = isRoleSaved(role.name);
-        // Build the pill — composite for custom roles, simple for system roles
-        let pillHTML;
-        if (isSystemRole) {
-            pillHTML = `<button class="role-name-pill role-name-pill-btn" data-role-type="custom" data-role-id="${role.id}">+ ${escapeHtml(role.name).toUpperCase()}</button>`;
-        } else {
-            const saveIconBtn = isSaved ? '' : `<button class="role-pill-icon-btn" data-role-id="${role.id}" data-action="save"><i class="fa-solid fa-floppy-disk"></i></button>`;
-            pillHTML = `<div class="role-name-pill role-name-pill-composite">
+        // Build dropdown items
+        const renameItem    = !isSystemRole ? `<div class="role-header-dd-item" data-dd-action="rename" data-role-id="${role.id}">Rename</div>` : '';
+        const saveItem      = (!isSystemRole && !isSaved) ? `<div class="role-header-dd-item" data-dd-action="save" data-role-id="${role.id}">Save for later use</div>` : '';
+        const duplicateItem = getCustomRoleCount() < getPlanRoleCap() ? `<div class="role-header-dd-item" data-dd-action="duplicate" data-role-id="${role.id}">Duplicate</div>` : '';
+        const removeItem    = `<div class="role-header-dd-item danger" data-dd-action="remove" data-role-id="${role.id}">Remove</div>`;
+        // Composite pill: [+ NAME | ⋯] with dropdown outside the overflow:hidden pill
+        const pillHTML = `<div class="role-header-menu">
+            <div class="role-name-pill role-name-pill-composite">
                 <button class="role-pill-contact-btn" data-role-type="custom" data-role-id="${role.id}">+ ${escapeHtml(role.name).toUpperCase()}</button>
                 <div class="role-pill-separator"></div>
-                <button class="role-pill-icon-btn" data-role-id="${role.id}" data-action="rename"><i class="fa-solid fa-pencil"></i></button>
-                ${saveIconBtn}
-            </div>`;
-        }
-        // X remove button sits right next to the pill, outside it
-        const removeBtn = `<button class="role-quick-remove-btn" data-role-id="${role.id}"><i class="fa-solid fa-xmark"></i></button>`;
+                <button class="role-header-menu-btn" data-role-id="${role.id}" title="Role options"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+            </div>
+            <div class="role-header-dd hidden">
+                ${renameItem}${saveItem}${duplicateItem}${removeItem}
+            </div>
+        </div>`;
         theadHTML += `
         <th role="columnheader" class="settings-col-role custom-role-col" data-role-id="${role.id}">
             <div class="custom-role-header-inner">
                 <div class="role-name-display">
                     ${pillHTML}
-                    ${removeBtn}
                 </div>
             </div>
         </th>`;
@@ -3810,7 +3856,7 @@ function wireTableEvents() {
         });
     });
 
-    // Pill contact buttons (simple pill-btn + composite contact-btn)
+    // Pill buttons — open quick-add contact modal for that role
     document.querySelectorAll('.role-name-pill-btn, .role-pill-contact-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -3823,21 +3869,30 @@ function wireTableEvents() {
         });
     });
 
-    // Composite pill icon buttons (rename / save)
-    document.querySelectorAll('.role-pill-icon-btn').forEach(btn => {
+    // Role header kebab — toggle dropdown open/close
+    document.querySelectorAll('.role-header-menu-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const roleId = btn.dataset.roleId;
-            const action = btn.dataset.action;
-            if (action === 'rename') openNameRoleModal(roleId);
-            else if (action === 'save') openSaveRoleModal(roleId);
+            const dd = btn.closest('.role-header-menu').querySelector('.role-header-dd');
+            const isOpen = !dd.classList.contains('hidden');
+            // Close all other open dropdowns first
+            document.querySelectorAll('.role-header-dd').forEach(d => d.classList.add('hidden'));
+            if (!isOpen) dd.classList.remove('hidden');
         });
     });
 
-    document.querySelectorAll('.role-quick-remove-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+    // Role header dropdown items — Rename / Save / Remove
+    document.querySelectorAll('.role-header-dd-item').forEach(item => {
+        item.addEventListener('click', (e) => {
             e.stopPropagation();
-            removeCustomRole(btn.dataset.roleId);
+            // Close the dropdown
+            item.closest('.role-header-dd')?.classList.add('hidden');
+            const roleId = item.dataset.roleId;
+            const action = item.dataset.ddAction;
+            if (action === 'rename') openNameRoleModal(roleId);
+            else if (action === 'save') openSaveRoleModal(roleId);
+            else if (action === 'duplicate') openDuplicateRoleModal(roleId);
+            else if (action === 'remove') removeCustomRole(roleId);
         });
     });
 
@@ -4049,7 +4104,7 @@ function toggleFeatureForAllRoles(featureKey, turnOn) {
     if (generalCb) generalCb.checked = turnOn;
     if (isDl) {
         if (!state.everyoneDownloadSettings) state.everyoneDownloadSettings = {};
-        state.everyoneDownloadSettings[featureKey] = { mode: turnOn ? 'full' : 'off', qty: '' };
+        state.everyoneDownloadSettings[featureKey] = { mode: turnOn ? 'full-and-individual' : 'off', qty: '' };
     }
 
     // Force-update all custom roles regardless of userChecked
@@ -4059,7 +4114,7 @@ function toggleFeatureForAllRoles(featureKey, turnOn) {
         const cb = document.querySelector(`.settings-table-checkbox[data-setting="${featureKey}"][data-role="${role.id}"]`);
         if (cb) cb.checked = turnOn;
         if (isDl) {
-            role.downloadSettings[featureKey] = { mode: turnOn ? 'full' : 'off', qty: '' };
+            role.downloadSettings[featureKey] = { mode: turnOn ? 'full-and-individual' : 'off', qty: '' };
         }
     });
 
@@ -4101,15 +4156,19 @@ function handleExpansionRadioChange(radio) {
     if (!cb) return;
 
     if (DOWNLOADS.includes(setting)) {
-        const expansionSettings = radio.closest('.expansion-settings');
-        const qty = expansionSettings?.querySelector('.inline-qty-input')?.value || '';
-        if (role === 'all') {
-            if (!state.everyoneDownloadSettings) state.everyoneDownloadSettings = {};
-            state.everyoneDownloadSettings[setting] = { mode: radio.value, qty };
-        } else {
-            const customRole = state.customRoles.find(r => r.id === role);
-            if (customRole) {
-                customRole.downloadSettings[setting] = { mode: radio.value, qty };
+        // Only write download mode to state from the mode select — not from resolution radios
+        // Resolution radios live inside .res-block; skip them here
+        if (!radio.closest('.res-block')) {
+            const expansionSettings = radio.closest('.expansion-settings');
+            const qty = expansionSettings?.querySelector('.inline-qty-input')?.value || '';
+            if (role === 'all') {
+                if (!state.everyoneDownloadSettings) state.everyoneDownloadSettings = {};
+                state.everyoneDownloadSettings[setting] = { mode: radio.value, qty };
+            } else {
+                const customRole = state.customRoles.find(r => r.id === role);
+                if (customRole) {
+                    customRole.downloadSettings[setting] = { mode: radio.value, qty };
+                }
             }
         }
     }
@@ -4191,10 +4250,16 @@ function clearExpansionInputs(settingKey, roleId) {
     cell.querySelectorAll('input[type="radio"]').forEach(r => { r.checked = false; });
     cell.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = false; cb.disabled = false; });
     cell.querySelectorAll('select').forEach(sel => { sel.value = sel.options[0]?.value || 'full-and-individual'; });
-    // Sync visual state for downloads
+    // Sync visual state for downloads and restore resolution defaults
     if (DOWNLOADS.includes(settingKey)) {
         const type = settingKey === 'downloads-photo' ? 'photo' : 'video';
-        updateDownloadSections(type, `${settingKey}_${roleId}`);
+        const suffix = `${settingKey}_${roleId}`;
+        // Re-apply resolution defaults after clearing
+        const origGallery = document.getElementById(`${type}_dl_gres_original_${suffix}`);
+        if (origGallery) origGallery.checked = true;
+        const origIndiv = document.querySelector(`input[name="${type}_indiv_res_${suffix}"][value="original"]`);
+        if (origIndiv) origIndiv.checked = true;
+        updateDownloadSections(type, suffix);
     }
 }
 
@@ -4272,11 +4337,12 @@ function setDownloadRadioDefault(setting, role, value) {
     else                                                     radioVal = 'full-and-individual';
     const select = document.getElementById(`${type}_dl_adv_${suffix}`);
     if (select) select.value = radioVal;
-    // Ensure Original gallery resolution is checked by default when no saved state exists
+    // Always default gallery resolution to Original
     const origGalleryRes = document.getElementById(`${type}_dl_gres_original_${suffix}`);
-    if (origGalleryRes && !origGalleryRes.closest('.settings-expansion-cell')?.querySelectorAll('input[id*="_dl_gres_"]:checked').length) {
-        origGalleryRes.checked = true;
-    }
+    if (origGalleryRes) origGalleryRes.checked = true;
+    // Always default individual resolution to Original
+    const origIndivRes = document.querySelector(`input[name="${type}_indiv_res_${suffix}"][value="original"]`);
+    if (origIndivRes) origIndivRes.checked = true;
     updateDownloadSections(type, suffix);
 }
 
@@ -4502,10 +4568,6 @@ function updateSidebarFeatureSummary() {
     const container = elements.sidebar.featSummary;
     if (!container) return;
 
-    if (state.accessType === 'offline') {
-        container.innerHTML = '<div class="summary-group" style="cursor:default;line-height:1.4;margin-left:32px;">Gallery is offline.<br>No one can view or access.</div>';
-        return;
-    }
 
     let html = '';
     let hasPartial = false;
@@ -4585,7 +4647,7 @@ function updateSidebarContactSummary() {
     });
 
     if (isInviteOnly && rows.length === 0) {
-        html = `<div class="sidebar-invite-only-warning"><i class="fa-solid fa-triangle-exclamation"></i> Gallery set to Invite Only. No contacts added — no one can access this gallery.</div>`;
+        html = `<div class="sidebar-invite-only-warning"><i class="fa-solid fa-triangle-exclamation"></i> No contacts added — gallery is inaccessible</div>`;
     }
 
     container.innerHTML = html;
@@ -4594,6 +4656,7 @@ function updateSidebarContactSummary() {
     refreshVisitorIconStates();
     refreshContactRoleColors();
     checkNoContactsBanner();
+    checkAccessNoContactsBanner();
 }
 
 // =====================================================
@@ -4763,7 +4826,7 @@ function addDemoContact(roleName) {
 const DEMO_ROLE_NAMES = ['Player','Coach','Parent','Athlete','Volunteer','Alumni','Sponsor','Member','Staff','Fan','Captain','Trainer'];
 
 function addRandomRoles() {
-    const remaining = getPlanRoleCap() - state.customRoles.length;
+    const remaining = getPlanRoleCap() - getCustomRoleCount();
     if (remaining <= 0) { triggerToast('Max roles reached'); return; }
     const existingNames = state.customRoles.map(r => r.name.trim().toUpperCase());
     const available = DEMO_ROLE_NAMES.filter(n => !existingNames.includes(n.toUpperCase()));
@@ -4804,7 +4867,7 @@ function updateDemoButtons() {
     container.innerHTML = '';
 
     // Add Random Roles button
-    if (state.customRoles.length < getPlanRoleCap()) {
+    if (getCustomRoleCount() < getPlanRoleCap()) {
         const btn = document.createElement('button');
         btn.className = 'btn-demo-action';
         btn.innerHTML = '<i class="fa-solid fa-dice"></i> Add Random Roles';
@@ -4892,6 +4955,7 @@ function updateAccessUI(target) {
 
     const pillLabels = { 'public': 'PUBLIC', 'password': 'PASSWORD PROTECTED', 'invite-only': 'INVITE ONLY', 'offline': 'OFFLINE' };
     elements.sidebar.pill.textContent = pillLabels[target] || target.toUpperCase();
+    elements.sidebar.pill.classList.toggle('red', target === 'offline');
 
     updateSidebarHelperText();
 
@@ -4911,6 +4975,8 @@ function updateAccessUI(target) {
     if (target !== 'invite-only') {
         hideVisitorsBanner();
     }
+    document.getElementById('offlineBanner')?.classList.toggle('hidden', target !== 'offline');
+    checkAccessNoContactsBanner();
     checkNoContactsBanner();
 }
 
@@ -5213,6 +5279,7 @@ document.addEventListener('click', function(e) {
 
 let nameRoleModalEditId = null;
 let pendingPrebuiltFeatures = null;
+let pendingDuplicateSourceId = null;
 
 function setRoleNameError(msg) {
     let err = document.getElementById('roleNameError');
@@ -5468,8 +5535,11 @@ function openNameRoleModal(roleId = null, presetName = null, presetFeatures = nu
         counter.style.color = len >= 30 ? '#d32f2f' : '#aaa';
     }
 
-    // Hide the "add a contact" section when building a role from the Change Role flow
-    if (optSection) optSection.style.display = _fromChangeRoleNoRoles ? 'none' : '';
+    // Hide the "add a contact" section when building a role from the Change Role no-roles flow
+    // (only applies when optSection is still visible from the else branch above)
+    if (_fromChangeRoleNoRoles && optSection && optSection.style.display !== 'none') {
+        optSection.style.display = 'none';
+    }
 
     updateNameRoleCreateBtn();
     modal.classList.remove('hidden');
@@ -5479,6 +5549,7 @@ function openNameRoleModal(roleId = null, presetName = null, presetFeatures = nu
 function closeNameRoleModal() {
     document.getElementById('nameRoleModal').classList.add('hidden');
     pendingPrebuiltFeatures = null;
+    pendingDuplicateSourceId = null;
     _fromChangeRoleNoRoles = false;
     // Restore the optional contact section
     const optSection = document.getElementById('nameRoleOptionalSection');
@@ -5487,6 +5558,30 @@ function closeNameRoleModal() {
     if (input) input.readOnly = false;
     const counter = document.getElementById('roleNameCharCount');
     if (counter) counter.style.display = '';
+}
+
+function openDuplicateRoleModal(roleId) {
+    const source = state.customRoles.find(r => r.id === roleId);
+    if (!source) return;
+    pendingDuplicateSourceId = roleId;
+    nameRoleModalEditId = null;
+    pendingPrebuiltFeatures = null;
+
+    const input     = document.getElementById('newRoleNameInput');
+    const title     = document.getElementById('nameRoleModalTitle');
+    const optSection = document.getElementById('nameRoleOptionalSection');
+    const counter   = document.getElementById('roleNameCharCount');
+
+    input.value = '';
+    input.readOnly = false;
+    title.textContent = `DUPLICATE "${source.name.trim().toUpperCase()}"`;
+    if (optSection) optSection.style.display = 'none';
+    if (counter) { counter.textContent = '0 / 30'; counter.style.display = ''; counter.style.color = '#aaa'; }
+
+    clearRoleNameError();
+    updateNameRoleCreateBtn();
+    document.getElementById('nameRoleModal').classList.remove('hidden');
+    input.focus();
 }
 
 document.getElementById('newRoleNameInput').addEventListener('input', function() {
@@ -5519,9 +5614,25 @@ document.getElementById('nameRoleCreateBtn').addEventListener('click', () => {
             sortCustomRoles();
             updateSidebarContactSummary();
         }
+    } else if (pendingDuplicateSourceId) {
+        // Duplicate — copy all features and download settings from source role
+        if (getCustomRoleCount() >= getPlanRoleCap()) return;
+        const source = state.customRoles.find(r => r.id === pendingDuplicateSourceId);
+        if (!source) return;
+        const newRole = createCustomRole(name);
+        FEATURES.forEach(f => {
+            newRole.features[f]    = !!source.features[f];
+            newRole.userChecked[f] = !!source.userChecked[f];
+        });
+        if (source.downloadSettings) {
+            newRole.downloadSettings = JSON.parse(JSON.stringify(source.downloadSettings));
+        }
+        state.customRoles.push(newRole);
+        sortCustomRoles();
+        pendingDuplicateSourceId = null;
     } else {
         // Only apply the plan cap for true custom roles, not Guest/Client prebuilts
-        if (!pendingPrebuiltFeatures && state.customRoles.length >= getPlanRoleCap()) return;
+        if (!pendingPrebuiltFeatures && getCustomRoleCount() >= getPlanRoleCap()) return;
         const newRole = createCustomRole(name);
         const featureSource = pendingPrebuiltFeatures;
         if (featureSource) {
@@ -5533,7 +5644,7 @@ document.getElementById('nameRoleCreateBtn').addEventListener('click', () => {
                 newRole.features[f] = true;
                 newRole.userChecked[f] = true;
                 if (DOWNLOADS.includes(f)) {
-                    newRole.downloadSettings[f] = { mode: 'full', qty: '' };
+                    newRole.downloadSettings[f] = { mode: 'full-and-individual', qty: '' };
                 }
             });
             pendingPrebuiltFeatures = null;
@@ -5597,8 +5708,8 @@ function createContactRow(fName, lName, email, mobile, displayRole) {
             <i class="fa-solid fa-ellipsis-vertical kebab-icon"></i>
             <div class="kebab-dropdown hidden">
                 <div class="kebab-item change-role-item" onclick="openRoleModal()">Change Role</div>
-                <div class="kebab-item demo-noop" onclick="triggerToast('Access link copied')">Copy Access Link</div>
-                <div class="kebab-item demo-noop" onclick="triggerToast('Password reset sent')">Send Password Reset</div>
+                <div class="kebab-item" onclick="triggerToast('Access link copied')">Copy Access Link</div>
+                <div class="kebab-item" onclick="triggerToast('Password reset sent')">Send Password Reset</div>
                 <div class="kebab-item hidden" data-perm-item onclick="openPermModal()">Customize Permissions</div>
                 <div class="kebab-divider"></div>
                 <div class="kebab-item danger remove-contact-item">Remove</div>
@@ -5641,6 +5752,10 @@ document.addEventListener('click', (e) => {
         document.querySelectorAll('.kebab-dropdown').forEach(d => d.classList.add('hidden'));
     } else {
         document.querySelectorAll('.kebab-dropdown').forEach(d => d.classList.add('hidden'));
+    }
+    // Close any open role-header dropdowns when clicking outside them
+    if (!e.target.closest('.role-header-menu')) {
+        document.querySelectorAll('.role-header-dd').forEach(d => d.classList.add('hidden'));
     }
 });
 
@@ -5712,7 +5827,7 @@ window.openRoleModal = function() {
     });
 
     // Add "Create New" option only if under plan cap
-    if (state.customRoles.length < getPlanRoleCap()) {
+    if (getCustomRoleCount() < getPlanRoleCap()) {
         const sep = document.createElement('option');
         sep.disabled = true;
         sep.textContent = '──────────';
@@ -5724,9 +5839,11 @@ window.openRoleModal = function() {
     }
 
     // Pre-select current role if available
+    // "CUSTOM" means per-contact permissions were customised — no exact match exists in the list,
+    // so fall through and leave the dropdown on its default first option (General)
     if (currentRowElement) {
         const current = currentRowElement.querySelector('.role-cell')?.textContent.trim().toUpperCase();
-        if (current) {
+        if (current && current !== 'CUSTOM') {
             const match = Array.from(select.options).find(o => o.value === current);
             if (match) select.value = match.value;
         }
@@ -5777,7 +5894,7 @@ document.getElementById('saveRoleBtn').addEventListener('click', () => {
         const name = createInput.value.trim();
         if (!name) return;
         // Check plan cap
-        if (state.customRoles.length >= getPlanRoleCap()) return;
+        if (getCustomRoleCount() >= getPlanRoleCap()) return;
         const newRole = createCustomRole(name);
         state.customRoles.push(newRole);
         sortCustomRoles();
@@ -6652,6 +6769,21 @@ function checkNoContactsBanner() {
     banner.classList.toggle('hidden', !(isInviteOnly && noContacts && contactsVisible));
 }
 
+function checkAccessNoContactsBanner() {
+    const banner = document.getElementById('accessNoContactsBanner');
+    if (!banner) return;
+    const isInviteOnly = state.accessType === 'invite-only';
+    const rows = Array.from(document.querySelectorAll('#contactsBody tr'));
+    const hasRealContacts = rows.some(r => r.querySelector('.role-cell')?.textContent.trim().toUpperCase() !== 'VISITOR');
+    const accessVisible = !elements.views.access.classList.contains('hidden');
+    banner.classList.toggle('hidden', !(isInviteOnly && !hasRealContacts && accessVisible));
+}
+
+document.getElementById('accessNoContactsLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    switchView('contacts');
+});
+
 function showVisitorsBanner() {
     const rows = Array.from(document.querySelectorAll('#contactsBody tr'));
     const hasVisitors = rows.some(r => r.querySelector('.role-cell')?.textContent.trim().toUpperCase() === 'VISITOR');
@@ -6726,7 +6858,11 @@ document.getElementById('upgradeRoleConfirmBtn').addEventListener('click', () =>
 // CHOOSE ROLE MODAL
 // =====================================================
 
-document.getElementById('chooseRoleCancelBtn').addEventListener('click', closeChooseRoleModal);
+document.getElementById('chooseRoleCancelBtn').addEventListener('click', () => {
+    _fromChangeRoleNoRoles = false;
+    _postRoleCreateAction = null;
+    closeChooseRoleModal();
+});
 
 document.getElementById('chooseRoleGuest').addEventListener('click', () => {
     if (_fromChangeRoleNoRoles) {
