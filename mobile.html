@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery Settings — Mobile</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: rgb(252,66,8);
+  --orange-soft: #fff5f2;
+  --dark: #1a1a1a;
+  --border: #e8e8e8;
+  --text: #1a1a1a;
+  --text-secondary: #777;
+  --bg: #f5f5f5;
+  --white: #ffffff;
+  --red: #d32f2f;
+  --green: #43a047;
+  --phone-w: 393px;
+  --phone-h: 852px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1c1c1e 50%, #0d0d0d 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ── PHONE FRAME ── */
+.phone-outer {
+  position: relative;
+  width: var(--phone-w);
+  filter: drop-shadow(0 40px 80px rgba(0,0,0,0.8));
+}
+.phone-shell {
+  background: linear-gradient(145deg, #3a3a3c, #1c1c1e);
+  border-radius: 54px;
+  padding: 14px;
+  position: relative;
+}
+.phone-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 54px;
+  border: 1px solid rgba(255,255,255,0.12);
+  pointer-events: none;
+}
+/* Side buttons */
+.btn-side-vol {
+  position: absolute; left: -3px; top: 130px;
+  width: 3px; height: 34px; background: #3a3a3c; border-radius: 2px 0 0 2px;
+}
+.btn-side-vol + .btn-side-vol { top: 174px; }
+.btn-side-power {
+  position: absolute; right: -3px; top: 154px;
+  width: 3px; height: 68px; background: #3a3a3c; border-radius: 0 2px 2px 0;
+}
+.phone-screen {
+  background: var(--bg);
+  border-radius: 44px;
+  overflow: hidden;
+  height: var(--phone-h);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ── STATUS BAR ── */
+.status-bar {
+  background: var(--white);
+  height: 52px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 28px 10px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+.status-time { font-size: 15px; font-weight: 700; color: var(--dark); letter-spacing: -0.3px; }
+.status-icons { display: flex; align-items: center; gap: 6px; }
+.status-icons i { font-size: 13px; color: var(--dark); }
+/* Dynamic island */
+.dynamic-island {
+  position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+  width: 120px; height: 36px; background: #000; border-radius: 20px;
+}
+
+/* ── APP HEADER ── */
+.app-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 9;
+}
+.app-header-top {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px 8px;
+}
+.header-back { color: var(--orange); font-size: 20px; width: 32px; }
+.header-thumb {
+  width: 36px; height: 36px; border-radius: 6px; object-fit: cover;
+  background: linear-gradient(135deg, #ff9a56, #ff6a00);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 14px; color: white;
+}
+.header-info { flex: 1; min-width: 0; }
+.header-title { font-size: 15px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-sub { font-size: 11px; color: var(--text-secondary); }
+.header-actions { display: flex; gap: 6px; }
+.header-btn {
+  height: 30px; padding: 0 10px; border-radius: 6px; border: none;
+  font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Open Sans', sans-serif;
+  display: flex; align-items: center; gap: 4px;
+}
+.header-btn-black { background: var(--dark); color: white; }
+.header-btn-orange { background: var(--orange); color: white; }
+.context-tabs {
+  display: flex; overflow-x: auto; gap: 0;
+  padding: 0 16px;
+  scrollbar-width: none;
+}
+.context-tabs::-webkit-scrollbar { display: none; }
+.ctx-tab {
+  flex-shrink: 0; padding: 8px 14px; font-size: 13px; font-weight: 600;
+  color: #999; border-bottom: 2px solid transparent; cursor: pointer;
+  white-space: nowrap;
+}
+.ctx-tab.active { color: var(--dark); border-bottom-color: var(--orange); }
+
+/* ── SCROLL AREA ── */
+.view-scroll {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.view-scroll::-webkit-scrollbar { display: none; }
+.view { display: none; padding-bottom: 16px; }
+.view.active { display: block; }
+
+/* ── SECTION HEADER ── */
+.section-header {
+  padding: 16px 16px 8px;
+  font-size: 11px; font-weight: 700; color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.6px;
+}
+
+/* ── BANNER ── */
+.banner {
+  margin: 0 16px 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; line-height: 1.5;
+}
+.banner-red { background: #fff0f0; border: 1px solid #f5c0c0; color: #b71c1c; }
+.banner-orange { background: #fff8f3; border: 1px solid #ffd0b0; color: #bf5a00; }
+.banner i { margin-top: 1px; flex-shrink: 0; }
+.banner-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.banner-btn {
+  padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;
+  border: 1px solid currentColor; background: transparent; cursor: pointer;
+  font-family: 'Open Sans', sans-serif; color: inherit;
+}
+
+/* ── ACCESS TILES ── */
+.access-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; padding: 0 16px 4px;
+}
+.access-tile {
+  background: var(--white); border: 2px solid var(--border);
+  border-radius: 14px; padding: 14px 12px;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 6px;
+  min-height: 100px;
+}
+.access-tile.active { border-color: var(--orange); background: #fff9f7; }
+.access-tile-icon { font-size: 20px; color: #bbb; }
+.access-tile.active .access-tile-icon { color: var(--orange); }
+.access-tile-label { font-size: 12px; font-weight: 700; color: var(--text); }
+.access-tile-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+/* ── SETTINGS CARD ── */
+.settings-card {
+  background: var(--white); border-radius: 14px;
+  margin: 8px 16px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+.settings-row {
+  display: flex; align-items: center;
+  padding: 14px 16px; gap: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-row-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 13px; }
+.icon-orange { background: var(--orange); color: white; }
+.icon-gray { background: #e8e8e8; color: #666; }
+.icon-blue { background: #007AFF; color: white; }
+.icon-green { background: #34C759; color: white; }
+.icon-red { background: var(--red); color: white; }
+.settings-row-content { flex: 1; min-width: 0; }
+.settings-row-label { font-size: 14px; font-weight: 600; color: var(--text); }
+.settings-row-sub { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+.settings-row-right { flex-shrink: 0; display: flex; align-items: center; gap: 8px; }
+.chevron { color: #c7c7cc; font-size: 13px; }
+
+/* ── PASSWORD FIELD ── */
+.pw-field-wrap { padding: 0 16px 0; }
+.pw-card { background: var(--white); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 8px; }
+.pw-input-row { display: flex; align-items: center; gap: 0; }
+.pw-input {
+  flex: 1; border: none; padding: 14px 16px; font-size: 14px;
+  font-family: 'Open Sans', sans-serif; background: transparent; outline: none;
+  color: var(--text);
+}
+.pw-eye { padding: 14px 14px; color: #aaa; cursor: pointer; background: none; border: none; }
+.pw-divider { height: 1px; background: #f0f0f0; margin: 0 16px; }
+.pw-gen-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; width: 100%; background: none; border: none;
+  font-size: 13px; font-weight: 600; color: var(--orange); cursor: pointer;
+  font-family: 'Open Sans', sans-serif; text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+.pw-gen-btn:last-child { border-bottom: none; }
+.pw-gen-btn i { width: 16px; }
+
+/* ── TOGGLE SWITCH ── */
+.toggle-switch { position: relative; width: 51px; height: 31px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: #e9e9ea; border-radius: 31px;
+  cursor: pointer; transition: background 0.3s;
+}
+.toggle-slider::before {
+  content: ''; position: absolute;
+  width: 27px; height: 27px; left: 2px; bottom: 2px;
+  background: white; border-radius: 50%;
+  transition: transform 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.toggle-switch input:checked + .toggle-slider { background: #34C759; }
+.toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* ── STATUS PILL ── */
+.status-pill {
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.pill-public { background: #e8f5e9; color: #2e7d32; }
+.pill-password { background: #fff3e0; color: #e65100; }
+.pill-invite { background: #e3f2fd; color: #1565c0; }
+.pill-offline { background: #ffebee; color: #c62828; }
+.pill-on { background: #e8f5e9; color: #2e7d32; }
+.pill-off { background: #f5f5f5; color: #999; }
+
+/* ── CONTACTS ── */
+.contact-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; background: var(--white);
+  border-bottom: 1px solid #f5f5f5; cursor: pointer;
+  transition: background 0.15s;
+  active-bg: #f9f9f9;
+}
+.contact-row:last-child { border-bottom: none; }
+.contact-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; color: white; flex-shrink: 0;
+  text-transform: uppercase;
+}
+.contact-info { flex: 1; min-width: 0; }
+.contact-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.contact-email { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.contact-right { display: flex; align-items: center; gap: 8px; }
+.role-badge {
+  padding: 2px 8px; border-radius: 10px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+}
+
+/* ── FAB ── */
+.fab {
+  position: fixed; right: calc(50% - var(--phone-w)/2 + 20px);
+  bottom: calc(50% - var(--phone-h)/2 + 80px);
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--orange); color: white; border: none;
+  font-size: 22px; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 16px rgba(252,66,8,0.4); cursor: pointer; z-index: 50;
+  transition: transform 0.2s;
+}
+.fab:active { transform: scale(0.92); }
+
+/* ── FEATURES TAB ── */
+.role-chips-wrap { padding: 12px 16px 0; }
+.role-chips {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px;
+  scrollbar-width: none;
+}
+.role-chips::-webkit-scrollbar { display: none; }
+.role-chip {
+  flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  border: 1.5px solid var(--border); background: var(--white); color: var(--text-secondary);
+  white-space: nowrap;
+}
+.role-chip.active { background: var(--orange); border-color: var(--orange); color: white; }
+.role-chip-add {
+  flex-shrink: 0; padding: 6px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  border: 1.5px dashed #ccc; background: transparent; color: #aaa;
+  white-space: nowrap;
+}
+
+.feature-list { padding: 0 16px; display: flex; flex-direction: column; gap: 0; }
+.feature-card { background: var(--white); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 8px; }
+.feature-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; cursor: pointer;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.15s;
+}
+.feature-row:last-child { border-bottom: none; }
+.feature-row-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.feature-row-label { flex: 1; font-size: 14px; font-weight: 600; color: var(--text); }
+.feature-row-right { display: flex; align-items: center; gap: 8px; }
+.feature-expand { padding: 10px 16px 14px; background: #fafafa; border-top: 1px solid #f0f0f0; }
+.feature-expand-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.dl-mode-select-mobile {
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--border); font-size: 13px; font-weight: 600;
+  font-family: 'Open Sans', sans-serif; background: var(--white); color: var(--text);
+  appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 32px; cursor: pointer;
+}
+.qty-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.qty-input {
+  width: 80px; padding: 9px 12px; border-radius: 10px;
+  border: 1px solid var(--border); font-size: 14px; font-weight: 600;
+  font-family: 'Open Sans', sans-serif; text-align: center;
+}
+.qty-label { font-size: 13px; color: var(--text-secondary); }
+.res-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.res-chip {
+  padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  border: 1.5px solid var(--border); background: var(--white); color: var(--text-secondary); cursor: pointer;
+}
+.res-chip.active { border-color: var(--orange); background: var(--orange-soft); color: var(--orange); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex; height: 82px; padding-bottom: 20px;
+  flex-shrink: 0; z-index: 10;
+}
+.nav-tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 3px; cursor: pointer; padding-top: 6px;
+  transition: all 0.15s;
+}
+.nav-tab i { font-size: 20px; color: #c7c7cc; transition: color 0.15s; }
+.nav-tab span { font-size: 10px; font-weight: 600; color: #c7c7cc; transition: color 0.15s; }
+.nav-tab.active i { color: var(--orange); }
+.nav-tab.active span { color: var(--orange); }
+
+/* ── BOTTOM SHEETS ── */
+.sheet-backdrop {
+  position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  border-radius: 44px;
+}
+.sheet-backdrop.open { opacity: 1; pointer-events: all; }
+.sheet {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: var(--white); border-radius: 20px 20px 0 0;
+  z-index: 101; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  max-height: 90%;
+  display: flex; flex-direction: column;
+}
+.sheet.open { transform: translateY(0); }
+.sheet-handle {
+  width: 36px; height: 5px; background: #e0e0e0; border-radius: 3px;
+  margin: 10px auto 0; flex-shrink: 0;
+}
+.sheet-header {
+  padding: 14px 20px 10px; display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.sheet-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.sheet-close { width: 28px; height: 28px; border-radius: 50%; background: #f0f0f0; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #666; font-size: 13px; }
+.sheet-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
+.sheet-footer { padding: 12px 20px 20px; display: flex; gap: 10px; border-top: 1px solid var(--border); flex-shrink: 0; }
+
+/* ── FORM INPUTS ── */
+.form-group { margin-bottom: 14px; }
+.form-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 6px; display: block; }
+.form-input {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: 14px; font-family: 'Open Sans', sans-serif; color: var(--text); outline: none;
+  transition: border-color 0.2s; background: var(--white);
+}
+.form-input:focus { border-color: var(--orange); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ── BUTTONS ── */
+.btn {
+  flex: 1; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer; font-family: 'Open Sans', sans-serif; text-align: center;
+  transition: all 0.15s;
+}
+.btn:active { opacity: 0.8; transform: scale(0.98); }
+.btn-primary { background: var(--orange); color: white; }
+.btn-secondary { background: #f0f0f0; color: var(--text); }
+.btn-danger { background: var(--red); color: white; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── ROLE OPTION ROWS ── */
+.role-option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 0; border-bottom: 1px solid #f5f5f5; cursor: pointer;
+}
+.role-option:last-child { border-bottom: none; }
+.role-option-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.role-option-dot.selected { border-color: var(--orange); background: var(--orange); }
+.role-option-dot.selected::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: white; }
+.role-option-info { flex: 1; }
+.role-option-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.role-option-desc { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+
+/* ── ACTION SHEET ── */
+.action-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 15px 0; border-bottom: 1px solid #f5f5f5; cursor: pointer;
+}
+.action-item:last-child { border-bottom: none; }
+.action-item i { width: 20px; text-align: center; color: var(--orange); font-size: 16px; }
+.action-item-label { font-size: 15px; font-weight: 600; color: var(--text); }
+.action-item.danger i, .action-item.danger .action-item-label { color: var(--red); }
+
+/* ── TOAST ── */
+.toast-mobile {
+  position: absolute; left: 16px; right: 16px; bottom: 96px;
+  background: rgba(30,30,30,0.95); color: white; border-radius: 12px;
+  padding: 13px 16px; display: flex; align-items: center; gap: 10px;
+  font-size: 14px; font-weight: 600; z-index: 200;
+  transform: translateY(20px); opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+.toast-mobile.show { transform: translateY(0); opacity: 1; }
+.toast-mobile i { color: #34C759; font-size: 16px; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 48px 32px; text-align: center; gap: 12px;
+}
+.empty-state i { font-size: 48px; color: #ddd; }
+.empty-state-title { font-size: 16px; font-weight: 700; color: var(--text); }
+.empty-state-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* ── DIVIDER ── */
+.list-divider { height: 1px; background: var(--border); margin: 0; }
+.spacer-12 { height: 12px; }
+.spacer-8 { height: 8px; }
+
+/* ── CHAR COUNT ── */
+.char-count { font-size: 11px; color: #aaa; text-align: right; margin-top: 4px; }
+
+/* ── ROLE ADD CARDS ── */
+.role-add-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; background: var(--white); cursor: pointer;
+  border-bottom: 1px solid #f5f5f5;
+}
+.role-add-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.role-add-info { flex: 1; }
+.role-add-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.role-add-desc { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── PLAN BADGE ── */
+.plan-badge { padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background: #e3f2fd; color: #1565c0; }
+.plan-badge-locked { background: #f5f5f5; color: #aaa; }
+</style>
+</head>
+<body>
+
+<div class="phone-outer">
+  <!-- Side buttons -->
+  <div class="btn-side-vol"></div>
+  <div class="btn-side-vol"></div>
+  <div class="btn-side-power"></div>
+
+  <div class="phone-shell">
+    <div class="phone-screen">
+
+      <!-- Dynamic Island -->
+      <div class="dynamic-island"></div>
+
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <i class="fa-solid fa-signal"></i>
+          <i class="fa-solid fa-wifi"></i>
+          <i class="fa-solid fa-battery-full"></i>
+        </div>
+      </div>
+
+      <!-- App Header -->
+      <div class="app-header">
+        <div class="app-header-top">
+          <div class="header-back"><i class="fa-solid fa-chevron-left"></i></div>
+          <div class="header-thumb"><i class="fa-solid fa-image"></i></div>
+          <div class="header-info">
+            <div class="header-title">Pet Photos</div>
+            <div class="header-sub">Price List: School</div>
+          </div>
+          <div class="header-actions">
+            <button class="header-btn header-btn-black"><i class="fa-solid fa-eye"></i> Preview</button>
+          </div>
+        </div>
+        <div class="context-tabs">
+          <div class="ctx-tab">Organize</div>
+          <div class="ctx-tab active">Settings</div>
+          <div class="ctx-tab">Design</div>
+          <div class="ctx-tab">Activity</div>
+        </div>
+      </div>
+
+      <!-- Scrollable Content -->
+      <div class="view-scroll" id="viewScroll">
+
+        <!-- ═══════════════════ ACCESS VIEW ═══════════════════ -->
+        <div class="view active" id="view-access">
+          <div class="section-header">Gallery Access</div>
+
+          <!-- Banners -->
+          <div class="banner banner-red" id="offlineBanner" style="display:none;">
+            <i class="fa-solid fa-circle-slash"></i>
+            <div>Gallery is <strong>OFFLINE</strong> — no one but you can access.</div>
+          </div>
+          <div class="banner banner-red" id="noContactsBannerAccess" style="display:none;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>
+              <strong>No one can currently access this gallery.</strong><br>
+              Invite Only is enabled but you haven't added any contacts yet.
+              <div class="banner-actions">
+                <button class="banner-btn" onclick="switchTab('contacts')">Add contacts</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="access-grid">
+            <div class="access-tile active" id="tile-public" onclick="setAccess('public')">
+              <div class="access-tile-icon"><i class="fa-solid fa-globe"></i></div>
+              <div class="access-tile-label">Public</div>
+              <div class="access-tile-desc">Anyone with the link</div>
+            </div>
+            <div class="access-tile" id="tile-password" onclick="setAccess('password')">
+              <div class="access-tile-icon"><i class="fa-solid fa-lock"></i></div>
+              <div class="access-tile-label">Password</div>
+              <div class="access-tile-desc">Link + password required</div>
+            </div>
+            <div class="access-tile" id="tile-invite" onclick="setAccess('invite')">
+              <div class="access-tile-icon"><i class="fa-solid fa-paper-plane"></i></div>
+              <div class="access-tile-label">Invite Only</div>
+              <div class="access-tile-desc">Added contacts only</div>
+            </div>
+            <div class="access-tile" id="tile-offline" onclick="setAccess('offline')">
+              <div class="access-tile-icon"><i class="fa-solid fa-ban"></i></div>
+              <div class="access-tile-label">Offline</div>
+              <div class="access-tile-desc">Visible to you only</div>
+            </div>
+          </div>
+
+          <!-- Password Settings -->
+          <div id="passwordSection" style="display:none;">
+            <div class="spacer-12"></div>
+            <div class="section-header">Password</div>
+            <div class="pw-field-wrap">
+              <div class="pw-card">
+                <div class="pw-input-row">
+                  <input type="text" class="pw-input" id="pwInput" value="889i6WAN" placeholder="Set a password">
+                  <button class="pw-eye" onclick="togglePwVis()"><i class="fa-solid fa-eye" id="pwEyeIcon"></i></button>
+                </div>
+                <div class="pw-divider"></div>
+                <button class="pw-gen-btn" onclick="genAlphanumeric()">
+                  <i class="fa-solid fa-shuffle"></i> Generate Alphanumeric
+                </button>
+                <button class="pw-gen-btn" onclick="genPassphrase()">
+                  <i class="fa-solid fa-dice"></i> Generate Passphrase
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Invite Only Settings -->
+          <div id="inviteSection" style="display:none;">
+            <div class="spacer-12"></div>
+            <div class="settings-card">
+              <div class="settings-row">
+                <div class="settings-row-icon icon-blue"><i class="fa-solid fa-user-check"></i></div>
+                <div class="settings-row-content">
+                  <div class="settings-row-label">Require Sign-in</div>
+                  <div class="settings-row-sub">Contacts must sign in to access</div>
+                </div>
+                <div class="settings-row-right">
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="signInToggle" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gallery Settings -->
+          <div class="spacer-12"></div>
+          <div class="section-header">Gallery Settings</div>
+          <div class="settings-card">
+            <div class="settings-row">
+              <div class="settings-row-icon icon-green"><i class="fa-solid fa-cart-shopping"></i></div>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Store</div>
+                <div class="settings-row-sub">Allow purchases from this gallery</div>
+              </div>
+              <div class="settings-row-right">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="storeToggle" onchange="updateStorePill()">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row-icon icon-blue"><i class="fa-solid fa-droplet"></i></div>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Watermarks</div>
+                <div class="settings-row-sub">Apply watermarks to images</div>
+              </div>
+              <div class="settings-row-right">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="watermarkToggle">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="settings-row">
+              <div class="settings-row-icon icon-gray"><i class="fa-solid fa-magnifying-glass"></i></div>
+              <div class="settings-row-content">
+                <div class="settings-row-label">Search Results</div>
+                <div class="settings-row-sub">Allow gallery in search results</div>
+              </div>
+              <div class="settings-row-right">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="searchToggle">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="spacer-12"></div>
+        </div>
+
+        <!-- ═══════════════════ FEATURES VIEW ═══════════════════ -->
+        <div class="view" id="view-features">
+          <div class="role-chips-wrap">
+            <div class="section-header" style="padding:16px 0 8px;">Permissions by Role</div>
+            <div class="role-chips" id="roleChips"></div>
+          </div>
+
+          <div class="feature-list" id="featureList"></div>
+          <div class="spacer-12"></div>
+        </div>
+
+        <!-- ═══════════════════ CONTACTS VIEW ═══════════════════ -->
+        <div class="view" id="view-contacts">
+          <div class="section-header">Contacts</div>
+
+          <div class="banner banner-red" id="offlineBannerContacts" style="display:none;">
+            <i class="fa-solid fa-circle-slash"></i>
+            <div>Gallery is <strong>OFFLINE</strong> — no one but you can access.</div>
+          </div>
+          <div class="banner banner-red" id="visitorsBanner" style="display:none;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>
+              Visitors can't access an Invite Only gallery.
+              <div class="banner-actions">
+                <button class="banner-btn" onclick="openUpgradeVisitorsSheet()">Reassign Visitors</button>
+              </div>
+            </div>
+          </div>
+          <div class="banner banner-red" id="noContactsBanner" style="display:none;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>No contacts added — gallery is inaccessible.</div>
+          </div>
+
+          <div class="settings-card" id="contactsList"></div>
+          <div class="spacer-12"></div>
+        </div>
+
+      </div><!-- /view-scroll -->
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav">
+        <div class="nav-tab active" id="nav-access" onclick="switchTab('access')">
+          <i class="fa-solid fa-lock"></i>
+          <span>Access</span>
+        </div>
+        <div class="nav-tab" id="nav-features" onclick="switchTab('features')">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Features</span>
+        </div>
+        <div class="nav-tab" id="nav-contacts" onclick="switchTab('contacts')">
+          <i class="fa-solid fa-users"></i>
+          <span>Contacts</span>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ SHEETS ═══════════════════ -->
+      <div class="sheet-backdrop" id="backdrop" onclick="closeAllSheets()"></div>
+
+      <!-- Add Contact Sheet -->
+      <div class="sheet" id="addContactSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-title">Add Contact</span>
+          <button class="sheet-close" onclick="closeSheet('addContactSheet')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="sheet-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input class="form-input" id="addFirst" placeholder="First">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input class="form-input" id="addLast" placeholder="Last">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email <span style="color:var(--red);">*</span></label>
+            <input class="form-input" id="addEmail" type="email" placeholder="email@example.com" oninput="checkAddForm()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mobile</label>
+            <input class="form-input" id="addMobile" placeholder="+1 (555) 000-0000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <div id="addRoleOptions"></div>
+          </div>
+        </div>
+        <div class="sheet-footer">
+          <button class="btn btn-secondary" onclick="closeSheet('addContactSheet')">Cancel</button>
+          <button class="btn btn-primary" id="addContactBtn" disabled onclick="addContact()">Add Contact</button>
+        </div>
+      </div>
+
+      <!-- Contact Actions Sheet -->
+      <div class="sheet" id="contactActionsSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-title" id="contactActionsTitle">Contact</span>
+          <button class="sheet-close" onclick="closeSheet('contactActionsSheet')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="sheet-body">
+          <div class="action-item" onclick="openChangeRoleSheet()">
+            <i class="fa-solid fa-user-tag"></i>
+            <span class="action-item-label">Change Role</span>
+            <i class="fa-solid fa-chevron-right" style="color:#ddd;margin-left:auto;"></i>
+          </div>
+          <div class="action-item" onclick="copyAccessLink()">
+            <i class="fa-solid fa-link"></i>
+            <span class="action-item-label">Copy Access Link</span>
+            <i class="fa-solid fa-chevron-right" style="color:#ddd;margin-left:auto;"></i>
+          </div>
+          <div class="action-item" onclick="sendPasswordReset()">
+            <i class="fa-solid fa-envelope"></i>
+            <span class="action-item-label">Send Password Reset</span>
+            <i class="fa-solid fa-chevron-right" style="color:#ddd;margin-left:auto;"></i>
+          </div>
+          <div class="action-item danger" onclick="removeContact()">
+            <i class="fa-solid fa-trash"></i>
+            <span class="action-item-label">Remove Contact</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Role Sheet -->
+      <div class="sheet" id="changeRoleSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-title">Change Role</span>
+          <button class="sheet-close" onclick="closeSheet('changeRoleSheet')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="sheet-body">
+          <div id="changeRoleOptions"></div>
+        </div>
+        <div class="sheet-footer">
+          <button class="btn btn-secondary" onclick="closeSheet('changeRoleSheet')">Cancel</button>
+          <button class="btn btn-primary" onclick="saveRoleChange()">Save</button>
+        </div>
+      </div>
+
+      <!-- Add Role Sheet -->
+      <div class="sheet" id="addRoleSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-title">Add a Role</span>
+          <button class="sheet-close" onclick="closeSheet('addRoleSheet')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="sheet-body">
+          <div class="settings-card" style="margin:0 0 16px;">
+            <div class="role-add-card" onclick="addPrebuiltRole('Guest')">
+              <div class="role-add-icon" style="background:#e8f5e9;"><i class="fa-solid fa-user" style="color:#2e7d32;"></i></div>
+              <div class="role-add-info">
+                <div class="role-add-name">Guest</div>
+                <div class="role-add-desc">Basic access — favorites, sharing, search</div>
+              </div>
+              <i class="fa-solid fa-plus" style="color:var(--orange);"></i>
+            </div>
+            <div class="role-add-card" onclick="addPrebuiltRole('Client')">
+              <div class="role-add-icon" style="background:#e3f2fd;"><i class="fa-solid fa-briefcase" style="color:#1565c0;"></i></div>
+              <div class="role-add-info">
+                <div class="role-add-name">Client</div>
+                <div class="role-add-desc">Full access including downloads</div>
+              </div>
+              <i class="fa-solid fa-plus" style="color:var(--orange);"></i>
+            </div>
+          </div>
+          <div class="settings-card" style="margin:0;" id="customRoleCard">
+            <div class="role-add-card" onclick="openCustomRoleSheet()">
+              <div class="role-add-icon" style="background:#fff3e0;"><i class="fa-solid fa-wand-magic-sparkles" style="color:#e65100;"></i></div>
+              <div class="role-add-info">
+                <div class="role-add-name">Custom Role</div>
+                <div class="role-add-desc" id="customRoleDesc">Create your own with any permissions</div>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color:#ddd;"></i>
+            </div>
+          </div>
+          <div id="planHint" style="display:none;margin-top:12px;padding:12px 14px;background:#f9f9f9;border:1px solid #e0e0e0;border-radius:10px;font-size:13px;color:#666;display:flex;align-items:center;gap:8px;">
+            <i class="fa-solid fa-lock" style="color:#aaa;"></i>
+            <span id="planHintText"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Role Name Sheet -->
+      <div class="sheet" id="customRoleSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-title">Name This Role</span>
+          <button class="sheet-close" onclick="closeSheet('customRoleSheet')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="sheet-body">
+          <div class="form-group">
+            <label class="form-label">Role Name <span style="color:var(--red);">*</span></label>
+            <input class="form-input" id="customRoleName" maxlength="30" placeholder="e.g. Athlete, Coach, Parent..." oninput="checkCustomRoleForm()">
+            <div class="char-count" id="customRoleCount">0 / 30</div>
+          </div>
+          <div id="customRoleError" style="color:var(--red);font-size:12px;margin-top:-8px;margin-bottom:10px;display:none;"></div>
+        </div>
+        <div class="sheet-footer">
+          <button class="btn btn-secondary" onclick="closeSheet('customRoleSheet')">Cancel</button>
+          <button class="btn btn-primary" id="createRoleBtn" disabled onclick="createCustomRole()">Create Role</button>
+        </div>
+      </div>
+
+      <!-- Download Settings Sheet -->
+      <div class="sheet" id="downloadSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-title" id="downloadSheetTitle">Download Settings</span>
+          <button class="sheet-close" onclick="closeSheet('downloadSheet')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="sheet-body" id="downloadSheetBody"></div>
+        <div class="sheet-footer">
+          <button class="btn btn-secondary" onclick="closeSheet('downloadSheet')">Cancel</button>
+          <button class="btn btn-primary" onclick="saveDownloadSettings()">Save</button>
+        </div>
+      </div>
+
+      <!-- Upgrade Visitors Sheet -->
+      <div class="sheet" id="upgradeVisitorsSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-header">
+          <span class="sheet-title">Reassign Visitors</span>
+          <button class="sheet-close" onclick="closeSheet('upgradeVisitorsSheet')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="sheet-body">
+          <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px;line-height:1.5;">Visitors can't access this Invite Only gallery. Reassign them to a role or remove them.</p>
+          <div id="upgradeVisitorOptions"></div>
+        </div>
+        <div class="sheet-footer">
+          <button class="btn btn-secondary" onclick="closeSheet('upgradeVisitorsSheet')">Keep as Visitors</button>
+          <button class="btn btn-primary" id="upgradeVisitorBtn" onclick="upgradeAllVisitors()">Reassign All</button>
+        </div>
+      </div>
+
+      <!-- Toast -->
+      <div class="toast-mobile" id="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMsg">Done</span>
+      </div>
+
+    </div><!-- /phone-screen -->
+  </div><!-- /phone-shell -->
+</div><!-- /phone-outer -->
+
+<script>
+// ═══════════════════ STATE ═══════════════════
+const PLAN = 'advanced'; // basic | professional | advanced
+
+const state = {
+  access: 'public',
+  contacts: [
+    { id: 1, first: 'Sarah', last: 'Mitchell', email: 'sarah@email.com', mobile: '555-0101', role: 'General' },
+    { id: 2, first: 'James', last: 'Okafor',   email: 'james@email.com', mobile: '555-0102', role: 'General' },
+    { id: 3, first: 'Priya', last: 'Nair',     email: 'priya@email.com', mobile: '555-0103', role: 'General' },
+  ],
+  customRoles: [],
+  selectedRoleId: 'everyone',
+  activeTab: 'access',
+  selectedContactId: null,
+  pendingRoleChange: null,
+  downloadDraft: null,
+};
+
+const AVATAR_COLORS = ['#ff6b6b','#4ecdc4','#45b7d1','#96ceb4','#feca57','#ff9ff3','#54a0ff','#5f27cd'];
+
+const FEATURE_DEFS = [
+  { key: 'commenting',     label: 'Commenting',       icon: 'fa-solid fa-comment',          expandable: false },
+  { key: 'favorites',      label: 'Favorites',        icon: 'fa-solid fa-heart',             expandable: false },
+  { key: 'sharing',        label: 'Sharing',          icon: 'fa-solid fa-share-nodes',       expandable: false },
+  { key: 'facefinder',     label: 'Face Finder',      icon: 'fa-solid fa-face-smile',        expandable: false },
+  { key: 'keywordsearch',  label: 'Keyword Search',   icon: 'fa-solid fa-magnifying-glass',  expandable: false },
+  { key: 'downloads-photo',label: 'Photo Downloads',  icon: 'fa-solid fa-image',             expandable: true,  type: 'photo' },
+  { key: 'downloads-video',label: 'Video Downloads',  icon: 'fa-solid fa-video',             expandable: true,  type: 'video' },
+];
+
+function createRole(name, features, downloads) {
+  const id = 'role_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+  const featureMap = {};
+  const dlMap = {};
+  FEATURE_DEFS.forEach(f => { featureMap[f.key] = features?.includes(f.key) || false; });
+  FEATURE_DEFS.filter(f => f.expandable).forEach(f => {
+    dlMap[f.key] = downloads?.[f.key] || { mode: featureMap[f.key] ? 'full-and-individual' : 'off', qty: '' };
+  });
+  return { id, name, features: featureMap, downloadSettings: dlMap };
+}
+
+// General (everyone) role
+const everyoneRole = createRole('General', ['commenting','favorites','sharing'], {});
+everyoneRole.id = 'everyone';
+
+function getPlanCap() {
+  if (PLAN === 'basic') return 0;
+  if (PLAN === 'professional') return 1;
+  return 5;
+}
+function getCustomCount() { return state.customRoles.length; }
+function getRoleById(id) {
+  if (id === 'everyone') return everyoneRole;
+  return state.customRoles.find(r => r.id === id);
+}
+function getAllRoles() { return [everyoneRole, ...state.customRoles]; }
+
+// ═══════════════════ TAB SWITCHING ═══════════════════
+function switchTab(tab) {
+  state.activeTab = tab;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + tab).classList.add('active');
+  document.getElementById('nav-' + tab).classList.add('active');
+  document.getElementById('viewScroll').scrollTop = 0;
+  if (tab === 'features') renderFeatures();
+  if (tab === 'contacts') renderContacts();
+  if (tab === 'access') updateAccessBanners();
+}
+
+// ═══════════════════ ACCESS ═══════════════════
+function setAccess(type) {
+  state.access = type;
+  document.querySelectorAll('.access-tile').forEach(t => t.classList.remove('active'));
+  document.getElementById('tile-' + type).classList.add('active');
+  document.getElementById('passwordSection').style.display = type === 'password' ? 'block' : 'none';
+  document.getElementById('inviteSection').style.display   = type === 'invite' ? 'block' : 'none';
+  updateAccessBanners();
+  if (state.activeTab === 'contacts') renderContacts();
+  if (state.activeTab === 'features') renderFeatures();
+  toast(type === 'offline' ? 'Gallery set to Offline' : type === 'invite' ? 'Set to Invite Only' : type === 'password' ? 'Password protection enabled' : 'Gallery set to Public');
+}
+
+function updateAccessBanners() {
+  const isOffline = state.access === 'offline';
+  const isInvite  = state.access === 'invite';
+  const hasContacts = state.contacts.filter(c => c.role !== 'Visitor').length > 0;
+  document.getElementById('offlineBanner').style.display          = isOffline ? 'flex' : 'none';
+  document.getElementById('noContactsBannerAccess').style.display  = (isInvite && !hasContacts) ? 'flex' : 'none';
+  document.getElementById('offlineBannerContacts').style.display   = isOffline ? 'flex' : 'none';
+  const visitors = state.contacts.filter(c => c.role === 'Visitor').length;
+  document.getElementById('visitorsBanner').style.display          = (isInvite && visitors > 0) ? 'flex' : 'none';
+  document.getElementById('noContactsBanner').style.display        = (isInvite && !hasContacts) ? 'flex' : 'none';
+}
+
+function togglePwVis() {
+  const inp = document.getElementById('pwInput');
+  const icon = document.getElementById('pwEyeIcon');
+  if (inp.type === 'text') { inp.type = 'password'; icon.className = 'fa-solid fa-eye'; }
+  else { inp.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
+}
+
+function genAlphanumeric() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let pw = ''; for (let i = 0; i < 8; i++) pw += chars[Math.floor(Math.random() * chars.length)];
+  document.getElementById('pwInput').value = pw;
+  toast('New password generated');
+}
+
+function genPassphrase() {
+  const words = ['amber','brave','cloud','dance','eagle','frost','grace','honey','ivory','jazzy','kite','lemon','maple','noble','ocean','pearl','quest','river','solar','tiger','ultra','vivid','wheat','xenon','yield','zesty'];
+  const pick = () => words[Math.floor(Math.random() * words.length)];
+  document.getElementById('pwInput').value = `${pick()}-${pick()}-${pick()}`;
+  toast('New passphrase generated');
+}
+
+// ═══════════════════ CONTACTS ═══════════════════
+function getAvatarColor(str) {
+  let h = 0; for (const c of str) h = (h * 31 + c.charCodeAt(0)) % AVATAR_COLORS.length;
+  return AVATAR_COLORS[h];
+}
+
+function getRoleColor(roleName) {
+  const r = roleName?.toUpperCase();
+  if (r === 'GENERAL')  return { bg: '#f0f0f0', color: '#555' };
+  if (r === 'GUEST')    return { bg: '#e8f5e9', color: '#2e7d32' };
+  if (r === 'CLIENT')   return { bg: '#e3f2fd', color: '#1565c0' };
+  if (r === 'VISITOR')  return { bg: '#fff3e0', color: '#e65100' };
+  const cs = ['#fce4ec','#f3e5f5','#ede7f6','#e8eaf6','#e0f2f1'];
+  const tc = ['#c62828','#6a1b9a','#4527a0','#283593','#00695c'];
+  let h = 0; for (const c of (roleName||'')) h = (h * 31 + c.charCodeAt(0)) % cs.length;
+  return { bg: cs[h], color: tc[h] };
+}
+
+function renderContacts() {
+  const list = document.getElementById('contactsList');
+  updateAccessBanners();
+  if (state.contacts.length === 0) {
+    list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-users"></i><div class="empty-state-title">No contacts yet</div><div class="empty-state-desc">Add contacts to manage who can access this gallery.</div></div>`;
+    renderAddContactRoleOptions();
+    return;
+  }
+  list.innerHTML = state.contacts.map(c => {
+    const initials = `${(c.first||'?')[0]}${(c.last||'')[0]||''}`.toUpperCase();
+    const col = getAvatarColor(c.first + c.last);
+    const rc = getRoleColor(c.role);
+    return `<div class="contact-row" onclick="openContactActions(${c.id})">
+      <div class="contact-avatar" style="background:${col};">${initials}</div>
+      <div class="contact-info">
+        <div class="contact-name">${c.first} ${c.last}</div>
+        <div class="contact-email">${c.email}</div>
+      </div>
+      <div class="contact-right">
+        <span class="role-badge" style="background:${rc.bg};color:${rc.color};">${c.role}</span>
+        <i class="fa-solid fa-chevron-right" style="color:#ddd;font-size:12px;"></i>
+      </div>
+    </div>`;
+  }).join('');
+  renderAddContactRoleOptions();
+}
+
+function renderAddContactRoleOptions() {
+  const roles = getAllRoles();
+  document.getElementById('addRoleOptions').innerHTML = roles.map(r =>
+    `<div class="role-option" onclick="selectAddRole('${r.id}',this)">
+      <div class="role-option-dot ${state._addRoleId === r.id ? 'selected' : ''}"></div>
+      <div class="role-option-info">
+        <div class="role-option-name">${r.name}</div>
+      </div>
+    </div>`
+  ).join('');
+  if (!state._addRoleId) {
+    state._addRoleId = 'everyone';
+    document.querySelector('#addRoleOptions .role-option-dot')?.classList.add('selected');
+  }
+}
+
+function selectAddRole(id, el) {
+  state._addRoleId = id;
+  document.querySelectorAll('#addRoleOptions .role-option-dot').forEach(d => d.classList.remove('selected'));
+  el.querySelector('.role-option-dot').classList.add('selected');
+}
+
+function checkAddForm() {
+  const email = document.getElementById('addEmail').value.trim();
+  document.getElementById('addContactBtn').disabled = !email;
+}
+
+function addContact() {
+  const first = document.getElementById('addFirst').value.trim() || 'New';
+  const last  = document.getElementById('addLast').value.trim() || 'Contact';
+  const email = document.getElementById('addEmail').value.trim();
+  const mobile= document.getElementById('addMobile').value.trim();
+  if (!email) return;
+  const role = getRoleById(state._addRoleId)?.name || 'General';
+  const id = Date.now();
+  state.contacts.push({ id, first, last, email, mobile, role });
+  ['addFirst','addLast','addEmail','addMobile'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('addContactBtn').disabled = true;
+  state._addRoleId = 'everyone';
+  closeSheet('addContactSheet');
+  renderContacts();
+  toast(`${first} ${last} added as ${role}`);
+}
+
+function openContactActions(id) {
+  state.selectedContactId = id;
+  const c = state.contacts.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('contactActionsTitle').textContent = `${c.first} ${c.last}`;
+  openSheet('contactActionsSheet');
+}
+
+function openChangeRoleSheet() {
+  closeSheet('contactActionsSheet');
+  const roles = getAllRoles();
+  const c = state.contacts.find(x => x.id === state.selectedContactId);
+  state.pendingRoleChange = c?.role || 'General';
+  document.getElementById('changeRoleOptions').innerHTML = roles.map(r => {
+    const active = c?.role === r.name;
+    const feats = Object.entries(r.features).filter(([,v])=>v).map(([k])=> FEATURE_DEFS.find(f=>f.key===k)?.label).filter(Boolean);
+    const dl = FEATURE_DEFS.filter(f=>f.expandable && r.features[f.key]);
+    const dlText = dl.map(f => {
+      const ds = r.downloadSettings?.[f.key];
+      if (!ds || ds.mode === 'off') return null;
+      const label = f.type === 'photo' ? 'Photos' : 'Videos';
+      if (ds.mode === 'full-and-individual') return `Full + Individual ${label}`;
+      if (ds.mode === 'full') return `Full Gallery ${label}`;
+      if (ds.mode === 'individual-only') return `Individual ${label}`;
+      if (ds.mode === 'specific') return `${ds.qty || '?'} ${label} downloads`;
+      return null;
+    }).filter(Boolean);
+    const allDesc = [...feats.filter(f => !['Photo Downloads','Video Downloads'].includes(f)), ...dlText];
+    return `<div class="role-option" onclick="selectRoleChange('${r.name}',this)">
+      <div class="role-option-dot ${active ? 'selected' : ''}"></div>
+      <div class="role-option-info">
+        <div class="role-option-name">${r.name}</div>
+        ${allDesc.length ? `<div class="role-option-desc">${allDesc.join(' · ')}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  openSheet('changeRoleSheet');
+}
+
+function selectRoleChange(roleName, el) {
+  state.pendingRoleChange = roleName;
+  document.querySelectorAll('#changeRoleOptions .role-option-dot').forEach(d => d.classList.remove('selected'));
+  el.querySelector('.role-option-dot').classList.add('selected');
+}
+
+function saveRoleChange() {
+  if (!state.pendingRoleChange || !state.selectedContactId) return;
+  const c = state.contacts.find(x => x.id === state.selectedContactId);
+  if (c) { c.role = state.pendingRoleChange; }
+  closeSheet('changeRoleSheet');
+  renderContacts();
+  toast(`Role updated to ${state.pendingRoleChange}`);
+}
+
+function copyAccessLink() {
+  closeSheet('contactActionsSheet');
+  toast('Access link copied');
+}
+function sendPasswordReset() {
+  closeSheet('contactActionsSheet');
+  toast('Password reset email sent');
+}
+function removeContact() {
+  const c = state.contacts.find(x => x.id === state.selectedContactId);
+  state.contacts = state.contacts.filter(x => x.id !== state.selectedContactId);
+  closeSheet('contactActionsSheet');
+  renderContacts();
+  toast(`${c?.first || 'Contact'} removed`);
+}
+
+function openUpgradeVisitorsSheet() {
+  const roles = [everyoneRole, ...state.customRoles];
+  document.getElementById('upgradeVisitorOptions').innerHTML = roles.map((r,i) =>
+    `<div class="role-option" onclick="selectVisitorUpgrade('${r.name}',this)">
+      <div class="role-option-dot ${i===0?'selected':''}"></div>
+      <div class="role-option-info"><div class="role-option-name">${r.name}</div></div>
+    </div>`
+  ).join('');
+  state._visitorUpgradeRole = everyoneRole.name;
+  openSheet('upgradeVisitorsSheet');
+}
+
+function selectVisitorUpgrade(name, el) {
+  state._visitorUpgradeRole = name;
+  document.querySelectorAll('#upgradeVisitorOptions .role-option-dot').forEach(d => d.classList.remove('selected'));
+  el.querySelector('.role-option-dot').classList.add('selected');
+}
+
+function upgradeAllVisitors() {
+  const role = state._visitorUpgradeRole || 'General';
+  let count = 0;
+  state.contacts.forEach(c => { if (c.role === 'Visitor') { c.role = role; count++; } });
+  closeSheet('upgradeVisitorsSheet');
+  renderContacts();
+  updateAccessBanners();
+  toast(`${count} visitor${count!==1?'s':''} reassigned to ${role}`);
+}
+
+// ═══════════════════ FEATURES ═══════════════════
+function renderRoleChips() {
+  const roles = getAllRoles();
+  const chips = document.getElementById('roleChips');
+  chips.innerHTML = roles.map(r =>
+    `<div class="role-chip ${r.id === state.selectedRoleId ? 'active' : ''}" onclick="selectRole('${r.id}')">${r.name}</div>`
+  ).join('');
+
+  // Add role chip
+  const cap = getPlanCap();
+  if (getCustomCount() < cap || cap === 0) {
+    chips.innerHTML += `<div class="role-chip-add" onclick="openSheet('addRoleSheet')"><i class="fa-solid fa-plus"></i> Add Role</div>`;
+  }
+}
+
+function selectRole(id) {
+  state.selectedRoleId = id;
+  renderFeatures();
+}
+
+function renderFeatures() {
+  renderRoleChips();
+  const role = getRoleById(state.selectedRoleId);
+  if (!role) return;
+  const list = document.getElementById('featureList');
+  list.innerHTML = '';
+
+  // Group simple features
+  const simpleFeats = FEATURE_DEFS.filter(f => !f.expandable);
+  const dlFeats     = FEATURE_DEFS.filter(f => f.expandable);
+
+  // Simple features card
+  const simpleCard = document.createElement('div');
+  simpleCard.className = 'feature-card';
+  simpleFeats.forEach(f => {
+    const on = role.features[f.key];
+    const row = document.createElement('div');
+    row.className = 'feature-row';
+    row.style.cursor = 'default';
+    row.innerHTML = `
+      <i class="feature-row-icon ${f.icon}" style="color:${on?'var(--orange)':'#ccc'};"></i>
+      <div class="feature-row-label">${f.label}</div>
+      <div class="feature-row-right">
+        <label class="toggle-switch">
+          <input type="checkbox" ${on?'checked':''} onchange="toggleFeature('${role.id}','${f.key}',this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>`;
+    simpleCard.appendChild(row);
+  });
+  list.appendChild(simpleCard);
+
+  // Download cards
+  dlFeats.forEach(f => {
+    const on = role.features[f.key];
+    const ds = role.downloadSettings?.[f.key] || { mode: 'off', qty: '' };
+    const summary = getDlSummary(ds, on);
+    const card = document.createElement('div');
+    card.className = 'feature-card';
+    card.innerHTML = `
+      <div class="feature-row" style="cursor:default;">
+        <i class="feature-row-icon ${f.icon}" style="color:${on?'var(--orange)':'#ccc'};"></i>
+        <div class="feature-row-label">${f.label}</div>
+        <div class="feature-row-right">
+          <label class="toggle-switch">
+            <input type="checkbox" ${on?'checked':''} onchange="toggleFeature('${role.id}','${f.key}',this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      ${on ? `<div class="feature-expand">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span class="feature-expand-label">Settings</span>
+          <span style="font-size:12px;color:var(--orange);font-weight:600;cursor:pointer;" onclick="openDownloadSheet('${role.id}','${f.key}','${f.label}')"><i class="fa-solid fa-pencil" style="font-size:10px;"></i> Edit</span>
+        </div>
+        <div style="font-size:13px;color:var(--text-secondary);">${summary}</div>
+      </div>` : ''}`;
+    list.appendChild(card);
+  });
+
+  // Role actions (for custom roles)
+  if (role.id !== 'everyone') {
+    const actCard = document.createElement('div');
+    actCard.className = 'feature-card';
+    actCard.style.marginTop = '8px';
+    actCard.innerHTML = `
+      <div class="action-item" style="padding:14px 16px;" onclick="openRenameRole('${role.id}')">
+        <i class="fa-solid fa-pencil"></i>
+        <span class="action-item-label">Rename Role</span>
+      </div>
+      <div class="action-item danger" style="padding:14px 16px;" onclick="removeRole('${role.id}')">
+        <i class="fa-solid fa-trash"></i>
+        <span class="action-item-label">Remove Role</span>
+      </div>`;
+    list.appendChild(actCard);
+  }
+}
+
+function getDlSummary(ds, on) {
+  if (!on || !ds || ds.mode === 'off') return 'Disabled';
+  if (ds.mode === 'full-and-individual') return 'Full Gallery + Individual Downloads';
+  if (ds.mode === 'full') return 'Full Gallery Download only';
+  if (ds.mode === 'individual-only') return 'Individual Download only';
+  if (ds.mode === 'specific') return `Up to ${ds.qty || '?'} downloads`;
+  return ds.mode;
+}
+
+function toggleFeature(roleId, featureKey, checked) {
+  const role = getRoleById(roleId);
+  if (!role) return;
+  role.features[featureKey] = checked;
+  if (FEATURE_DEFS.find(f => f.key === featureKey)?.expandable) {
+    if (!role.downloadSettings) role.downloadSettings = {};
+    role.downloadSettings[featureKey] = { mode: checked ? 'full-and-individual' : 'off', qty: role.downloadSettings[featureKey]?.qty || '' };
+  }
+  renderFeatures();
+}
+
+function openDownloadSheet(roleId, featureKey, label) {
+  const role = getRoleById(roleId);
+  if (!role) return;
+  state.downloadDraft = { roleId, featureKey, ...JSON.parse(JSON.stringify(role.downloadSettings?.[featureKey] || { mode: 'full-and-individual', qty: '' })) };
+  const feat = FEATURE_DEFS.find(f => f.key === featureKey);
+  const isVideo = feat?.type === 'video';
+  document.getElementById('downloadSheetTitle').textContent = label + ' Settings';
+  document.getElementById('downloadSheetBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">Download Mode</label>
+      <select class="dl-mode-select-mobile" id="dlModeSelect" onchange="updateDlDraft()">
+        <option value="full-and-individual" ${state.downloadDraft.mode==='full-and-individual'?'selected':''}>Full Gallery &amp; Individual</option>
+        <option value="full" ${state.downloadDraft.mode==='full'?'selected':''}>Full Gallery Only</option>
+        <option value="individual-only" ${state.downloadDraft.mode==='individual-only'?'selected':''}>Individual Only</option>
+        <option value="specific" ${state.downloadDraft.mode==='specific'?'selected':''}>Specific Amount</option>
+      </select>
+    </div>
+    <div id="qtySection" style="display:${state.downloadDraft.mode==='specific'?'block':'none'};">
+      <div class="form-group">
+        <label class="form-label">Max Downloads</label>
+        <div class="qty-row">
+          <input type="number" class="qty-input" id="dlQtyInput" value="${state.downloadDraft.qty||5}" min="1" oninput="updateDlDraft()">
+          <span class="qty-label">${isVideo ? 'videos' : 'photos'} per person</span>
+        </div>
+      </div>
+    </div>
+    ${!isVideo ? `<div class="form-group" id="resSection" style="display:${state.downloadDraft.mode==='individual-only'?'none':'block'};">
+      <label class="form-label">Gallery Download Resolution</label>
+      <div class="res-chips">
+        ${['Original','High','Medium','Low'].map(r=>`<div class="res-chip active" onclick="this.classList.toggle('active')">${r}</div>`).join('')}
+      </div>
+    </div>
+    <div class="form-group" id="indivResSection" style="display:${(state.downloadDraft.mode==='full-and-individual'||state.downloadDraft.mode==='individual-only')?'block':'none'};">
+      <label class="form-label">Individual Download Resolution</label>
+      <div class="res-chips" id="indivResChips">
+        ${['Original','High Res','Low Res'].map((r,i)=>`<div class="res-chip ${i===0?'active':''}" onclick="toggleRadioChip(this,'indivResChips')">${r}</div>`).join('')}
+      </div>
+    </div>` : `<div class="form-group" id="resSection" style="display:${state.downloadDraft.mode==='individual-only'?'none':'block'};">
+      <label class="form-label">Gallery Download Resolution</label>
+      <div class="res-chips">
+        <div class="res-chip active" onclick="this.classList.toggle('active')">Original</div>
+        <div class="res-chip" onclick="this.classList.toggle('active')">1080p</div>
+      </div>
+    </div>
+    <div class="form-group" id="indivResSection" style="display:${(state.downloadDraft.mode==='full-and-individual'||state.downloadDraft.mode==='individual-only')?'block':'none'};">
+      <label class="form-label">Individual Download Resolution</label>
+      <div class="res-chips" id="indivResChips">
+        ${['Original','1080p'].map((r,i)=>`<div class="res-chip ${i===0?'active':''}" onclick="toggleRadioChip(this,'indivResChips')">${r}</div>`).join('')}
+      </div>
+    </div>`}
+  `;
+  openSheet('downloadSheet');
+}
+
+function toggleRadioChip(el, groupId) {
+  document.querySelectorAll(`#${groupId} .res-chip`).forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function updateDlDraft() {
+  const mode = document.getElementById('dlModeSelect')?.value;
+  const qty  = document.getElementById('dlQtyInput')?.value || '';
+  if (state.downloadDraft) { state.downloadDraft.mode = mode; state.downloadDraft.qty = qty; }
+  const qtySection   = document.getElementById('qtySection');
+  const resSection   = document.getElementById('resSection');
+  const indivSection = document.getElementById('indivResSection');
+  if (qtySection)   qtySection.style.display   = mode === 'specific' ? 'block' : 'none';
+  if (resSection)   resSection.style.display   = mode === 'individual-only' ? 'none' : 'block';
+  if (indivSection) indivSection.style.display = (mode === 'full-and-individual' || mode === 'individual-only') ? 'block' : 'none';
+}
+
+function saveDownloadSettings() {
+  if (!state.downloadDraft) return;
+  const { roleId, featureKey, mode, qty } = state.downloadDraft;
+  const role = getRoleById(roleId);
+  if (role) { if (!role.downloadSettings) role.downloadSettings = {}; role.downloadSettings[featureKey] = { mode, qty }; }
+  closeSheet('downloadSheet');
+  renderFeatures();
+  toast('Download settings saved');
+}
+
+// ═══════════════════ ROLES ═══════════════════
+function openAddRoleSheet() {
+  const cap = getPlanCap();
+  const count = getCustomCount();
+  const hint = document.getElementById('planHint');
+  const hintText = document.getElementById('planHintText');
+  const customCard = document.getElementById('customRoleCard');
+
+  if (PLAN === 'basic') {
+    customCard.style.opacity = '0.4'; customCard.style.pointerEvents = 'none';
+    hint.style.display = 'flex';
+    hintText.textContent = 'Custom roles require the Professional or Advanced plan.';
+  } else if (count >= cap) {
+    customCard.style.opacity = '0.4'; customCard.style.pointerEvents = 'none';
+    hint.style.display = 'flex';
+    hintText.textContent = PLAN === 'professional' ? "You've used your 1 custom role included with Professional. Upgrade to Advanced for up to 5." : "You've used all 5 custom roles on the Advanced plan.";
+  } else {
+    customCard.style.opacity = ''; customCard.style.pointerEvents = '';
+    hint.style.display = 'none';
+    document.getElementById('customRoleDesc').textContent = cap - count === 1 ? '1 custom role slot remaining' : `${cap - count} custom role slots remaining`;
+  }
+  openSheet('addRoleSheet');
+}
+
+function addPrebuiltRole(name) {
+  const exists = state.customRoles.find(r => r.name.toUpperCase() === name.toUpperCase());
+  if (exists) { toast(`${name} role already added`); return; }
+  const features = name === 'Client'
+    ? FEATURE_DEFS.map(f => f.key)
+    : ['favorites','sharing','facefinder','keywordsearch'];
+  const dlMap = {};
+  FEATURE_DEFS.filter(f => f.expandable).forEach(f => {
+    dlMap[f.key] = { mode: features.includes(f.key) ? 'full-and-individual' : 'off', qty: '' };
+  });
+  const role = createRole(name, features, dlMap);
+  state.customRoles.push(role);
+  state.selectedRoleId = role.id;
+  closeSheet('addRoleSheet');
+  switchTab('features');
+  toast(`"${name}" role added`);
+}
+
+function openCustomRoleSheet() { closeSheet('addRoleSheet'); openSheet('customRoleSheet'); }
+
+function checkCustomRoleForm() {
+  const val = document.getElementById('customRoleName').value;
+  document.getElementById('customRoleCount').textContent = `${val.length} / 30`;
+  const btn = document.getElementById('createRoleBtn');
+  const err = document.getElementById('customRoleError');
+  const trimmed = val.trim();
+  const reserved = ['everyone','general','visitor'].includes(trimmed.toLowerCase());
+  const dupe = state.customRoles.some(r => r.name.trim().toLowerCase() === trimmed.toLowerCase());
+  if (reserved || dupe) {
+    err.textContent = reserved ? `"${trimmed}" is a reserved name.` : `A role named "${trimmed}" already exists.`;
+    err.style.display = 'block'; btn.disabled = true;
+  } else {
+    err.style.display = 'none'; btn.disabled = !trimmed;
+  }
+}
+
+function createCustomRole() {
+  const name = document.getElementById('customRoleName').value.trim();
+  if (!name) return;
+  const role = createRole(name, [], {});
+  state.customRoles.push(role);
+  state.selectedRoleId = role.id;
+  document.getElementById('customRoleName').value = '';
+  document.getElementById('customRoleCount').textContent = '0 / 30';
+  document.getElementById('createRoleBtn').disabled = true;
+  closeSheet('customRoleSheet');
+  switchTab('features');
+  toast(`"${name}" role created`);
+}
+
+function openRenameRole(id) { toast('Rename coming soon'); }
+
+function removeRole(id) {
+  const role = state.customRoles.find(r => r.id === id);
+  if (!role) return;
+  state.customRoles = state.customRoles.filter(r => r.id !== id);
+  state.contacts.forEach(c => { if (c.role === role.name) c.role = 'General'; });
+  state.selectedRoleId = 'everyone';
+  renderFeatures();
+  toast(`"${role.name}" role removed`);
+}
+
+// ═══════════════════ SHEETS ═══════════════════
+function openSheet(id) {
+  document.getElementById('backdrop').classList.add('open');
+  document.getElementById(id).classList.add('open');
+}
+function closeSheet(id) {
+  document.getElementById(id).classList.remove('open');
+  const anyOpen = document.querySelectorAll('.sheet.open').length > 0;
+  if (!anyOpen) document.getElementById('backdrop').classList.remove('open');
+}
+function closeAllSheets() {
+  document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
+  document.getElementById('backdrop').classList.remove('open');
+}
+
+// ═══════════════════ TOAST ═══════════════════
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ═══════════════════ FAB ═══════════════════
+function handleFab() {
+  const tab = state.activeTab;
+  if (tab === 'contacts') { state._addRoleId = 'everyone'; renderAddContactRoleOptions(); checkAddForm(); openSheet('addContactSheet'); }
+  else if (tab === 'features') openAddRoleSheet();
+}
+
+// ═══════════════════ INIT ═══════════════════
+renderContacts();
+renderFeatures();
+updateAccessBanners();
+</script>
+
+<!-- FAB (outside phone for positioning reference; repositioned via CSS) -->
+<style>
+.fab-wrap {
+  position: absolute;
+  bottom: 88px; right: 20px;
+  z-index: 50;
+}
+</style>
+<script>
+// Inject FAB inside phone screen
+const phoneScreen = document.querySelector('.phone-screen');
+const fab = document.createElement('button');
+fab.className = 'fab';
+fab.style.cssText = 'position:absolute;right:20px;bottom:88px;width:52px;height:52px;border-radius:50%;background:var(--orange);color:white;border:none;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(252,66,8,0.4);cursor:pointer;z-index:50;transition:transform 0.2s;';
+fab.innerHTML = '<i class="fa-solid fa-plus"></i>';
+fab.onclick = handleFab;
+phoneScreen.appendChild(fab);
+</script>
+
+</body>
+</html>
