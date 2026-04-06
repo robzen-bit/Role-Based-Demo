@@ -3230,6 +3230,7 @@ function rebuildFeaturesTable() {
                     inputs: Array.from(cell.querySelectorAll('input')).map(i => ({
                         type: i.type, checked: i.checked, value: i.value
                     })),
+                    selects: Array.from(cell.querySelectorAll('select')).map(s => s.value),
                     qtyHidden: Array.from(cell.querySelectorAll('.inline-qty-input')).map(i => i.classList.contains('hidden')),
                     qtyValues: Array.from(cell.querySelectorAll('.inline-qty-input')).map(i => i.value)
                 };
@@ -3241,6 +3242,7 @@ function rebuildFeaturesTable() {
             inputs: evCell ? Array.from(evCell.querySelectorAll('input')).map(i => ({
                 type: i.type, checked: i.checked, value: i.value
             })) : [],
+            selects: evCell ? Array.from(evCell.querySelectorAll('select')).map(s => s.value) : [],
             qtyHidden: evCell ? Array.from(evCell.querySelectorAll('.inline-qty-input')).map(i => i.classList.contains('hidden')) : [],
             roleStates
         };
@@ -3261,9 +3263,17 @@ function rebuildFeaturesTable() {
                 if (saved.type === 'checkbox' || saved.type === 'radio') el.checked = saved.checked;
                 else el.value = saved.value;
             });
+            if (s.selects) {
+                const selects = Array.from(evCell.querySelectorAll('select'));
+                s.selects.forEach((val, i) => { if (selects[i]) selects[i].value = val; });
+            }
             Array.from(evCell.querySelectorAll('.inline-qty-input')).forEach((el, i) => {
                 if (s.qtyHidden[i] !== undefined) el.classList.toggle('hidden', s.qtyHidden[i]);
             });
+            if (DOWNLOADS.includes(key)) {
+                const type = key === 'downloads-photo' ? 'photo' : 'video';
+                updateDownloadSections(type, `${key}_all`);
+            }
         }
 
         state.customRoles.forEach(role => {
@@ -3277,13 +3287,34 @@ function rebuildFeaturesTable() {
                     if (sv.type === 'checkbox' || sv.type === 'radio') el.checked = sv.checked;
                     else el.value = sv.value;
                 });
+                if (saved.selects) {
+                    const selects = Array.from(cell.querySelectorAll('select'));
+                    saved.selects.forEach((val, i) => { if (selects[i]) selects[i].value = val; });
+                }
                 const qtyInputs = Array.from(cell.querySelectorAll('.inline-qty-input'));
                 qtyInputs.forEach((el, i) => {
                     if (saved.qtyHidden[i] !== undefined) el.classList.toggle('hidden', saved.qtyHidden[i]);
                     if (saved.qtyValues[i] !== undefined) el.value = saved.qtyValues[i];
                 });
+                if (DOWNLOADS.includes(key)) {
+                    const type = key === 'downloads-photo' ? 'photo' : 'video';
+                    updateDownloadSections(type, `${key}_${role.id}`);
+                }
             } else if (!saved && cell) {
-                syncExpansionFromEveryone(key, role.id);
+                // New role (e.g. duplicate) — initialize select from state, then sync inputs from Everyone
+                if (DOWNLOADS.includes(key)) {
+                    const type = key === 'downloads-photo' ? 'photo' : 'video';
+                    const dlState = role.downloadSettings?.[key];
+                    if (dlState) {
+                        const sel = cell.querySelector(`#${type}_dl_adv_${key}_${role.id}`);
+                        if (sel) sel.value = dlState.mode || 'full-and-individual';
+                        const qtyEl = cell.querySelector(`#${type}_dl_qty_${key}_${role.id}`);
+                        if (qtyEl && dlState.qty) qtyEl.value = dlState.qty;
+                        updateDownloadSections(type, `${key}_${role.id}`);
+                    }
+                } else {
+                    syncExpansionFromEveryone(key, role.id);
+                }
             }
         });
 
