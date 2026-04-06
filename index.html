@@ -3464,9 +3464,19 @@ function updateDownloadSections(type, suffix) {
     indivRes?.classList.toggle('hidden', !showIndiv);
     if (divider) divider.classList.toggle('hidden', !showGallery && !showIndiv);
 
-    // Refresh the summary badge in the table header cell
+    // Save mode to state so hover card and Change Role preview stay current
     const setting = `downloads-${type}`;
     const role = suffix.replace(`${setting}_`, '');
+    const qty = document.getElementById(`${type}_dl_qty_${suffix}`)?.value || '';
+    if (role === 'all') {
+        if (!state.everyoneDownloadSettings) state.everyoneDownloadSettings = {};
+        state.everyoneDownloadSettings[setting] = { mode: val, qty };
+    } else {
+        const customRole = state.customRoles.find(r => r.id === role);
+        if (customRole) customRole.downloadSettings[setting] = { mode: val, qty };
+    }
+
+    // Refresh the summary badge in the table header cell
     updateFlagBadge(setting, role);
 }
 
