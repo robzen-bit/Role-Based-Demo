@@ -4601,7 +4601,9 @@ function updateSidebarContactSummary() {
             const mode = settings?.mode || 'off';
             if (mode === 'off') return;
             const type = d === 'downloads-photo' ? 'photo' : 'video';
-            if (mode === 'full') items.push(`Download all ${type}s`);
+            if (mode === 'full') items.push(`Download ${type}s — full gallery`);
+            else if (mode === 'full-and-individual') items.push(`Download ${type}s — full gallery & individual`);
+            else if (mode === 'individual-only') items.push(`Download ${type}s — individual`);
             else if (mode === 'specific') {
                 const n = parseInt(settings?.qty) || 0;
                 items.push(`Download ${n} ${n === 1 ? type : type + 's'}`);
@@ -6053,7 +6055,9 @@ function getPermissionsFromCustomPerms(perms) {
         const s = perms[d];
         if (!s || s.mode === 'off') return;
         const type = d === 'downloads-photo' ? 'photo' : 'video';
-        if (s.mode === 'full') items.push(`Download all ${type}s`);
+        if (s.mode === 'full') items.push(`Download ${type}s — full gallery`);
+        else if (s.mode === 'full-and-individual') items.push(`Download ${type}s — full gallery & individual`);
+        else if (s.mode === 'individual-only') items.push(`Download ${type}s — individual`);
         else if (s.mode === 'specific') {
             const n = parseInt(s.qty) || 0;
             items.push(`Download ${n} ${n === 1 ? type : type + 's'}`);
