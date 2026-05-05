@@ -2869,8 +2869,8 @@ function applyPlanRestrictions() {
     const isBasic    = currentPlan === 'basic';
     const isPro      = currentPlan === 'professional';
     const isAdvanced = currentPlan === 'advanced';
-    const atProCap      = isPro      && getCustomRoleCount() >= 1;
-    const atAdvancedCap = isAdvanced && getCustomRoleCount() >= 5;
+    const atProCap      = isPro      && getCustomRoleCount() >= getPlanRoleCap();
+    const atAdvancedCap = isAdvanced && getCustomRoleCount() >= getPlanRoleCap();
     const lockRoles  = isBasic || atProCap || atAdvancedCap;
     const lockPerContact = isBasic || isPro;  // basic+pro: no per-contact permissions
 
@@ -2894,9 +2894,9 @@ function applyPlanRestrictions() {
         const hintText = document.getElementById('chooseRoleUpgradeHintText');
         if (lockRoles && hintText) {
             if (atAdvancedCap) {
-                hintText.innerHTML = `You've used all 5 custom roles included with the <strong>Advanced</strong> plan.`;
+                hintText.innerHTML = `You've used all ${planRoleCaps.advanced} custom roles included with the <strong>Advanced</strong> plan.`;
             } else if (atProCap) {
-                hintText.innerHTML = `The <strong>Professional</strong> plan includes 1 custom role and you've used it.<br>Upgrade to <strong>Advanced</strong> for up to 5 custom roles.`;
+                hintText.innerHTML = `The <strong>Professional</strong> plan includes ${planRoleCaps.professional} custom role${planRoleCaps.professional === 1 ? '' : 's'} and you've used ${planRoleCaps.professional === 1 ? 'it' : 'them'}.<br>Upgrade to <strong>Advanced</strong> for up to ${planRoleCaps.advanced} custom roles.`;
             } else {
                 hintText.innerHTML = `Custom roles require the <strong>Professional</strong> or <strong>Advanced</strong> plan.`;
             }
