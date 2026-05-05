@@ -1269,6 +1269,17 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 }
 .admin-toggle-switch input:checked + .admin-toggle-slider { background: var(--primary-orange); }
 .admin-toggle-switch input:checked + .admin-toggle-slider:before { transform: translateX(16px); }
+.admin-cap-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.admin-cap-cell { display: flex; flex-direction: column; gap: 5px; }
+.admin-cap-label { font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.4px; }
+.admin-cap-input {
+    width: 100%; padding: 6px 8px; font-size: 13px; font-family: 'Open Sans', sans-serif;
+    border: 1px solid #ddd; border-radius: 6px; color: #333;
+    text-align: center; appearance: textfield;
+}
+.admin-cap-input:focus { outline: none; border-color: var(--primary-orange); }
+.admin-cap-input::-webkit-inner-spin-button,
+.admin-cap-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 .demo-col-heading {
     font-size: 11px;
     font-weight: 700;
@@ -1999,6 +2010,23 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
                                             </div>
                                         </div>
                                         <div>
+                                            <p class="admin-section-label">Custom Role Limits</p>
+                                            <div class="admin-cap-grid">
+                                                <div class="admin-cap-cell">
+                                                    <label class="admin-cap-label">Basic</label>
+                                                    <input type="number" class="admin-cap-input" id="adminCapBasic" min="0" max="20" value="0" onchange="updatePlanRoleCap('basic', this.value)">
+                                                </div>
+                                                <div class="admin-cap-cell">
+                                                    <label class="admin-cap-label">Professional</label>
+                                                    <input type="number" class="admin-cap-input" id="adminCapPro" min="0" max="20" value="1" onchange="updatePlanRoleCap('professional', this.value)">
+                                                </div>
+                                                <div class="admin-cap-cell">
+                                                    <label class="admin-cap-label">Advanced</label>
+                                                    <input type="number" class="admin-cap-input" id="adminCapAdvanced" min="0" max="20" value="5" onchange="updatePlanRoleCap('advanced', this.value)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
                                             <p class="admin-section-label">Features</p>
                                             <div class="admin-toggle-row">
                                                 <span class="admin-toggle-label">Download Watermarks</span>
@@ -2495,11 +2523,21 @@ h2 { font-size: 18px; margin: 0 0 var(--gap-sm) 0; color: #333; }
 const FEATURES = ['commenting', 'favorites', 'sharing', 'facefinder', 'keywordsearch', 'downloads-photo', 'downloads-video'];
 const EXPANDABLE = ['keywordsearch', 'downloads-photo', 'downloads-video'];
 const DOWNLOADS = ['downloads-photo', 'downloads-video'];
-const MAX_CUSTOM_ROLES = 5; // absolute demo cap (Advanced plan)
+const MAX_CUSTOM_ROLES = 20; // absolute demo cap
+const planRoleCaps = { basic: 0, professional: 1, advanced: 5 };
 function getPlanRoleCap() {
-    if (currentPlan === 'basic')        return 0;
-    if (currentPlan === 'professional') return 1;
-    return 5; // advanced
+    return planRoleCaps[currentPlan] ?? 0;
+}
+function updatePlanRoleCap(plan, val) {
+    const n = Math.max(0, Math.min(20, parseInt(val) || 0));
+    planRoleCaps[plan] = n;
+    // Keep input in sync (clamp display value)
+    const inputId = plan === 'professional' ? 'adminCapPro' : `adminCap${plan.charAt(0).toUpperCase() + plan.slice(1)}`;
+    const el = document.getElementById(inputId);
+    if (el) el.value = n;
+    // Refresh the table so cap badges / add button update immediately
+    rebuildFeaturesTable();
+    requestAnimationFrame(() => applyPlanRestrictions());
 }
 function getCustomRoleCount() {
     return state.customRoles.filter(r => !['GUEST', 'CLIENT'].includes(r.name.trim().toUpperCase())).length;
